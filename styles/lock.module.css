@@ -1,0 +1,52 @@
+
+.lock {
+ width: 100%;
+ height: 100%;
+ 
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+}
+
+.lock form {
+ width: 200px;
+ height: 70%;
+ box-shadow: 0 0 4px 1px var(--theme3ro);
+ transform: scale(1);
+ border-radius: 5px;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+}
+
+.lock form button {
+ background-color: transparent;
+ border: 1px solid var(--border);
+ border-radius: 5px;
+}
+
+.home {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  border: 1px solid #2c2c2c;
+  background-color: transparent;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  & .bug {
+   position: absolute;
+   transform: scale(0.4) translateY(10px);
+   color:  #288dff;
+  }
+  & .pets {
+   position: absolute;
+   transform: scale(0.8);
+   color: #2c2c2c;
+  }
+ }

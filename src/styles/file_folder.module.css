@@ -1,0 +1,19 @@
+
+.container {
+ width: 25px;
+ min-height: 25px;
+ border-radius: 2px;
+ 
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ 
+ font-size: 4.5px;
+ user-select: none;
+}
+
+.container:active {
+  background-color: #a1ccfcb7;
+  filter: blur(.2px);
+}

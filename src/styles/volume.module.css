@@ -1,0 +1,30 @@
+/** @format */
+
+.container {
+	position: absolute;
+	transform: scale(0.5);
+	background-color: #a1ccfcb7;
+	padding: 2px;
+	box-sizing: border-box;
+	border-radius: 3px;
+	box-shadow: 0 0 5px 1px #273755;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	z-index: 99;
+}
+
+.container div {
+	width: 100%;
+	display: flex;
+	justify-content: space-evenly;
+	box-sizing: border-box;
+}
+
+.container input {
+	width: 90%;
+	margin-inline: 2px;
+	box-sizing: border-box;
+}

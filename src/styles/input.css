@@ -1,0 +1,111 @@
+/** @format */
+
+.container {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	height: 40px;
+	border: none;
+
+	display: flex;
+	flex-direction: column;
+
+	& .separator {
+		padding: 0;
+		margin: 0;
+		box-sizing: border-box;
+
+		position: relative;
+		width: 100%;
+		padding-inline: 2px;
+		box-sizing: border-box;
+		border-radius: 3px 3px 0 0;
+		border-bottom: 2px solid var(--input-border);
+		/*
+		display: grid;
+		grid-template-columns: 30px 1px;
+		grid-template-rows: 25px;
+*/
+		& .input-label {
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+
+			position: absolute;
+			top: 2px;
+			left: 32px;
+			transition: top 0.5s ease;
+		}
+		& .area-icon {
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+
+			grid-area: area-icon;
+		}
+		& input {
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+
+			grid-area: area-input;
+			border: none;
+			border-radius: 0;
+			color: black;
+			font-size: 20px;
+			padding: 0;
+			box-sizing: border-box;
+
+			width: 100%;
+			height: 25px;
+			background-color: transparent;
+		}
+		& input:focus {
+			border: none;
+			box-shadow: none;
+			outline: none;
+		}
+		&:has(input:focus) {
+			background-color: var(--input-background);
+			box-shadow: inset 0 -5px 10px 0 var(--input-shadow);
+			transition: box-shadow 0.5s ease;
+		}
+		& input::placeholder {
+			color: transparent;
+		}
+		&:not(.area-icon) .input-label {
+			left: 0px;
+		}
+		&:has(.area-icon) .input-label {
+			left: 30px;
+		}
+		&:has(input:focus, input:not(:placeholder-shown)) {
+			align-self: end;
+			transition: grid-template-rows 0.5s ease;
+		}
+		& input:focus,
+		input:not(:placeholder-shown) {
+			align-self: end;
+		}
+		&:has(input:focus, input:not(:placeholder-shown)) .input-label {
+			top: -16px;
+			transition: top 0.5s ease;
+			color: var(--input-color);
+			font-weight: 600;
+		}
+		&:has(.area-icon):has(input:focus, input:not(:placeholder-shown))
+			.input-label {
+			top: -16px;
+			left: 0px;
+			transition: top 0.5s ease;
+			color: var(--input-color);
+			font-weight: 600;
+		}
+	}
+
+	& span {
+		opacity: 0;
+		color: var(--input-span);
+		transition: opacity 1s ease;
+	} 
+}

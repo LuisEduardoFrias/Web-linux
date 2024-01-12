@@ -1,0 +1,25 @@
+/** @format */
+
+.container {
+	width: 30px;
+	height: 30px;
+	border-radius: 5px;
+	box-sizing: border-box;
+	border: 1px solid #2c2c2c;
+	background-color: transparent;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	& .bug {
+		position: absolute;
+		transform: scale(0.4) translateY(10px);
+		color: #288dff;
+	}
+	& .pets {
+		position: absolute;
+		transform: scale(0.8);
+		color: #2c2c2c;
+	}
+}

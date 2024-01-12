@@ -1,0 +1,44 @@
+/** @format */
+
+.lock {
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.lock form {
+	width: 200px;
+	height: 250px;
+	box-shadow: 0 0 4px 1px var(--theme3ro);
+	border-radius: 5px;
+	padding: 10px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 20px;
+}
+
+.lock form button {
+	background-color: transparent;
+	border: 1px solid var(--border);
+	padding: 5px 15px;
+	border-radius: 5px;
+	user-select: none;
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	transition: background-color ease 0.3s;
+}
+
+.lock form button:hover {
+	background-color: var(--border);
+}
+
+.lock form button:active {
+	background-color: var(--border);
+}
