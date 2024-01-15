@@ -7,7 +7,7 @@ import {
 	getDataStorage
 } from "hk/use_storage";
 
-export default function Middleware(action: object, dispatch: any): void {
+export default function Middleware(action: object, dispatch: any, state : any): void {
 	const _actions = {
 		unblock: () => {
 			if (!action.user && !action.password)

@@ -1,5 +1,8 @@
-import Core from "./core"
+/** @format */
+
+import Core from "./core";
+import TuComponente from "./componente"
 
 export default function Home() {
-	return (<Core />);
+	return <TuComponente />;
 }

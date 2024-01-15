@@ -3,6 +3,7 @@
 
 import Draggable from "react-draggable";
 import { useEffect } from "react";
+import TuComponente from "./componente";
 //
 import TaskBar from "cp/task_bar";
 import Screen from "cp/screen";
@@ -21,34 +22,42 @@ import styles from "st/core.module.css";
 export default function Core() {
 	const state = useAllState();
 
-	const { desks, taskbar, unblock, loading } = state;
+	alert("core");
 
 	useEffect(() => {
-		//alert("core: " + JSON.stringify(state));
-	}, [state]);
-
-	useEffect(() => {
-		(async () => {
-			const listApp = await Get("internal_apps");
-		})();
+		//alert("core: " + JSON.stringify());
+		alert("core 2: ");
 	}, []);
 
+	/*	useEffect(() => {
+	  	//alert("core: " + JSON.stringify());
+	  	//alert("core: ");
+	}, [state.unblock, state.loading]);
+*/
+	/*	useEffect(() => {
+  		(async () => {
+  			const listApp = await Get("internal_apps");
+  		})();
+  	}, []);
+*/
 	return (
 		<div className={styles.core}>
 			{
 				<Screen>
-					{!unblock ? (
-						<>
-							<LdDualRing show={loading} />
-							<Lock />
-						</>
-					) : (
-						<>
-							<TaskBar />
-							<div className={styles.container_desk}>
-								<div>
-									{/*
-									desks.map((desk_: Dk, index: number) => {
+					{
+						/*!state.unblock*/ false ? (
+							<>
+								<LdDualRing show={state.loading} />
+								<Lock />
+							</>
+						) : (
+							<>
+								<TaskBar />
+								<div className={styles.container_desk}>
+									<div>
+										<TuComponente />
+										{/*
+									state.desks.map((desk_: Dk, index: number) => {
 									if (desk_.key === talkback.desktop.key)
 										return (
 											<div key={index} className={styles.desk}>
@@ -62,14 +71,15 @@ export default function Core() {
 											</div>
 										);
 								}) */}
-									{/*taskbar.panel_menu*/ true && <Menu />}
-									{/*taskbar.panel_volume*/ true && <Volume />}
-									{/*taskbar.panel_info*/ true && <Info />}
+										{/*state.taskbar.panel_menu true && <Menu /> */}
+										{/*state.taskbar.panel_volume*/ true && <Volume />}
+										{/*state.taskbar.panel_info*/ true && <Info />}
+									</div>
+									{/* state.taskbar.panel_checklock && <PanelChecklock /> */}
 								</div>
-								{taskbar.panel_checklock && <PanelChecklock />}
-							</div>
-						</>
-					)}
+							</>
+						)
+					}
 				</Screen>
 			}
 		</div>

@@ -28,80 +28,81 @@ export enum actions {
 }
 
 export default function Reducer(state, action) {
+	const _state = { ...state };
 	const _actions = {
 		unblock: () => {
-			return { ...state, unblock: action.unblock };
+			return { ..._state, unblock: action.unblock };
 		},
 		lock() {
-			state.taskbar.panel_checklock = false;
-			return { ...state, unblock: false };
+			_state.taskbar.panel_checklock = false;
+			return { ..._state, unblock: false };
 		},
 		loginKey: () => {
-			return { ...state, unblock: action.unblock, loading: action.loading };
+			return { ..._state, unblock: action.unblock, loading: action.loading };
 		},
 		showPanelMenu: () => {
-			desTaskBarProp(state, ["panel_menu"], action.value);
-			return { ...state };
+			desTaskBarProp(_state, ["panel_menu"], action.value);
+			return { ..._state };
 		},
 		showVolumePanel: () => {
-			desTaskBarProp(state, ["panel_volume"], action.value);
-			return { ...state };
+			desTaskBarProp(_state, ["panel_volume"], action.value);
+			return { ..._state };
 		},
 		changeDesktop: () => {
-			state.taskbar.desktop = action.value;
-			if (state.taskbar.panel_volume)
-				state.taskbar.panel_volume = !action.value;
-			return { ...state };
+			_state.taskbar.desktop = action.value;
+			if (_state.taskbar.panel_volume)
+				_state.taskbar.panel_volume = !action.value;
+			return { ..._state };
 		},
 		changeVolume: () => {
-			state.taskbar.volume = action.value;
-			return { ...state };
+			_state.taskbar.volume = action.value;
+			return { ..._state };
 		},
 		showLockCheckPanel: () => {
-			desTaskBarProp(state, ["panel_checklock"], action.value);
-			return { ...state };
+			desTaskBarProp(_state, ["panel_checklock"], action.value);
+			return { ..._state };
 		},
 		showInfoPanel: () => {
-			desTaskBarProp(state, ["panel_info"], action.value);
-			return { ...state };
+			desTaskBarProp(_state, ["panel_info"], action.value);
+			return { ..._state };
 		},
 		/*	
 		openApp: () => {
-			const desk = state[state.bar.desktop];
+			const desk = _state[_state.bar.desktop];
 
 			desk.addWindow(
 				new Wa(Guid.create().toString(), action.app.name, action.app.file),
-				state.initDt.size.w,
-				state.initDt.size.y - state.bar.h
+				_state.initDt.size.w,
+				_state.initDt.size.y - _state.bar.h
 			);
 
-			if (state.bar.showPanelMenu) state.bar.showMenu(false);
+			if (_state.bar.showPanelMenu) _state.bar.showMenu(false);
 
-			return { ...state };
+			return { ..._state };
 		},
 		openFolder: () => {
-			const desk = state[state.bar.desktop];
+			const desk = _state[_state.bar.desktop];
 
 			desk.addWindow(
 				new Wd(Guid.create().toString(), "Folder", null),
-				state.initDt.size.w,
-				state.initDt.size.y - state.bar.h
+				_state.initDt.size.w,
+				_state.initDt.size.y - _state.bar.h
 			);
 
-			if (state.bar.showPanelVolum) state.bar.showVolum(false);
-			if (state.bar.showPanelMenu) state.bar.showMenu(false);
+			if (_state.bar.showPanelVolum) _state.bar.showVolum(false);
+			if (_state.bar.showPanelMenu) _state.bar.showMenu(false);
 
-			return { ...state };
+			return { ..._state };
 		},
 		closeApp: () => {
-			const desk = state[state.bar.desktop];
+			const desk = _state[_state.bar.desktop];
 			desk.removeWindow(action.window);
-			return { ...state };
+			return { ..._state };
 		},
 		normalApp: () => {
-			const desk = state[state.bar.desktop];
+			const desk = _state[_state.bar.desktop];
 			desk.updateWindow(action.window);
-			return { ...state };
+			return { ..._state };
 		},
 		*/
 		default: () => {

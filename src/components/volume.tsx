@@ -3,11 +3,13 @@
 "use client";
 import Icon from "cp/icon";
 import styles from "st/volume.module.css";
-import { getState } from "hk/use_all_state";
+import { superState } from "hk/use_all_state";
 
 export default function Volume() {
-	const { taskbar } = getState();
-
+	const [taskbar, setState] = superState("taskbar", "Volume");
+	
+	alert("volume");
+	
 	const _style = {
 		width: "200px", //`${panelvolum.size.w}px`,
 		height: "50px", //`${panelvolum.size.h}px`,

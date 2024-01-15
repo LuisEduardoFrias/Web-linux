@@ -12,6 +12,7 @@ export default function Info() {
 	const { taskbar } = getState();
 	const [info, setInfo] = useState(null);
 
+	alert("info");
 	const _style: React.CSSProperties = {
 		width: "150px", //`${panelvolum.size.w}px`,
 		height: "150px", //`${panelvolum.size.h}px`,
@@ -20,7 +21,6 @@ export default function Info() {
 		//display: taskbar.panel_volume ? "block" : "none",
 		opacity: taskbar.panel_info ? "1" : "0"
 	};
-
 	useEffect(() => {
 		(async () => {
 			setInfo(await Get("info"));
@@ -43,6 +43,7 @@ export default function Info() {
 		</div>
 	);
 }
+
 
 function firtsUpperCase(key: string): string {
 	return `${key.substring(0, 1).toUpperCase()}${key.substring(1, key.length)}`;
