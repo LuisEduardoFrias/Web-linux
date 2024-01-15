@@ -15,13 +15,36 @@ function subscribe(props: string[], id: string) {
 		});
 }
 
-function middleware(state: any, action: any, reducer: any) {
+function middleware(value: any) {
+	const callSubscriber = useCallback(() => {
+		alert("callSubscriber");
+		if (state.hasOwnProperty("changedProperties"))
+			state.changedProperties.forEach(p =>
+				Reflect.ownKeys(subscriber).forEach(s => {
+					subscriber[s].props.forEach(pr => {
+						if (p === pr) {
+							const newObj: object = {};
+
+							for (let i: number = 0; i < subscriber[s].props.length; i++) {
+								subscriber[s].props.forEach(o =>
+									Reflect.set(newObj, o, globalState[o])
+								);
+							}
+							subscriber[s].disp({ type: state.action, value: newObj[p] });
+						}
+					});
+				})
+			);
+	}, [globalState]);
+
 	const newState: object = reducer(state, action);
 	const changedProperties = getChangedProperties(state, newState);
 	updateGlobalState(newState, changedProperties);
 	Reflect.set(newState, "changedProperties", changedProperties);
 	Reflect.set(newState, "action", action.type);
 	return newState;
+
+	callSubscriber();
 }
 
 function getChangedProperties(oldState: object, newState: object): string[] {
@@ -51,56 +74,45 @@ export default function useSuperState(
 ) {
 	alert("init");
 
-	const callerFunction = useCallback(() => {
-		new Error().stack?.split("\n")[2].trim().split(" ")[1];
+	const callerFunction = useMeno(() => {
+		alert("callerFunction");
+		return new Error().stack?.split("\n")[2].trim().split(" ")[1];
 	}, [reducer, initalState, props]);
 
-	const executeInitComponet = useCallback(() => {
-		alert("calletFunction");
+	const executeSubscribe = useCallback(
+		(callerFunction: any) => {
+			alert("subscribe");
+			subscribe(props, callerFunction);
+		},
+		[callerFunction]
+	);
+	executeSubscribe(callerFunction);
 
-		subscribe(props, callerFunction);
-		alert("subscribe");
+	const executeInitComponet = useCallback(
+		(initalState: any) => {
+			alert("init globalState");
+			Reflect.ownKeys(initalState).forEach(e =>
+				Reflect.set(globalState, e, initalState[e])
+			);
+		},
+		[initalState]
+	);
+	executeInitComponet(initalState);
 
-		Reflect.ownKeys(initalState).forEach(e =>
-			Reflect.set(globalState, e, initalState[e])
-		);
-		alert("init globalState");
-	}, [reducer, initalState, props]);
-	executeInitComponet();
-
-	const [state, dispatch] = useReducer((_state, _action) => {
-		return middleware(_state, _action, reducer);
-	}, initalState);
+	const [state, dispatch] = useReducer(reducer, initalState);
 
 	alert("execute reducer");
 
-	const setDespatch = useCallback(() => {
-		Reflect.set(subscriber[callerFunction], "disp", dispatch);
-		alert("set despa");
-	}, [reducer, initalState, props]);
-	setDespatch();
+	const setDespatch = useCallback(
+		(subscriber: any, callerFunction: any, dispatch: any) => {
+			alert("set despatch");
 
-	const callSubscriber = useCallback(() => {
-		alert("callSubscriber");
-		if (state.hasOwnProperty("changedProperties"))
-			state.changedProperties.forEach(p =>
-				Reflect.ownKeys(subscriber).forEach(s => {
-					subscriber[s].props.forEach(pr => {
-						if (p === pr) {
-							const newObj: object = {};
+			Reflect.set(subscriber[callerFunction], "disp", dispatch);
+		},
+		[subscriber, callerFunction, dispatch]
+	);
 
-							for (let i: number = 0; i < subscriber[s].props.length; i++) {
-								subscriber[s].props.forEach(o =>
-									Reflect.set(newObj, o, globalState[o])
-								);
-							}
-							subscriber[s].disp({ type: state.action, value: newObj[p] });
-						}
-					});
-				})
-			);
-	}, [globalState]);
-	callSubscriber();
+	setDespatch(subscriber, callerFunction, dispatch);
 
-	return [globalState, dispatch];
+	return [state, middleware];
 }
