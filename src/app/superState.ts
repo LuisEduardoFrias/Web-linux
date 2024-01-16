@@ -1,50 +1,50 @@
 /** @format */
 
-import React, { useReducer, useMeno, useCallback } from "react";
+import React, { useReducer } from "react";
 
-const subscriber: object = {};
+type Action<T extends any, P = undefined> = P extends undefined
+	? { type: T }
+	: { type: T } & P;
+type Subscriber = { props: string[]; wasCalled: boolean; disp: Action };
+type Reducer = (state: object, action: Action) => object;
+
+const UPDATE_OBTION_ID:string = "__update_obtion_id__";
+const subscriber: Subscriber = {};
 const globalState: object = {};
 
 //type ObserverFunction = (caller: string) => void;
 
-function subscribe(props: string[], id: string) {
-	if (!subscriber[id])
+function subscribe(props: string[], id: string): void {
+	if (!subscriber[id]) {
 		Reflect.set(subscriber, id, {
 			props,
-			oldProps: {}
+			wasCalled: false,
+			disp: null
 		});
+	}
 }
 
-function middleware(value: any) {
-	const callSubscriber = useCallback(() => {
-		alert("callSubscriber");
-		if (state.hasOwnProperty("changedProperties"))
-			state.changedProperties.forEach(p =>
-				Reflect.ownKeys(subscriber).forEach(s => {
-					subscriber[s].props.forEach(pr => {
-						if (p === pr) {
-							const newObj: object = {};
+function middledistpach(Action: object, reducer: Reducer): void {
+	const newState: object = reducer(globalState, action);
 
-							for (let i: number = 0; i < subscriber[s].props.length; i++) {
-								subscriber[s].props.forEach(o =>
-									Reflect.set(newObj, o, globalState[o])
-								);
-							}
-							subscriber[s].disp({ type: state.action, value: newObj[p] });
-						}
-					});
-				})
-			);
-	}, [globalState]);
+	const changedProperties = getChangedProperties(globalState, newState);
 
-	const newState: object = reducer(state, action);
-	const changedProperties = getChangedProperties(state, newState);
 	updateGlobalState(newState, changedProperties);
-	Reflect.set(newState, "changedProperties", changedProperties);
-	Reflect.set(newState, "action", action.type);
-	return newState;
 
-	callSubscriber();
+	changedProperties.forEach((p: string) => {
+		for (let key in subscriber) {
+			subscriber[key].props.forEach((pr: string) => {
+				if (p === pr && subscriber[key].wasCalled === false) {
+					subscriber[key].disp({ type: UPDATE_OBTION_ID });
+					subscriber[key].wasCalled = true;
+				}
+			});
+		}
+	});
+
+	for (let key in subscriber) {
+		subscriber[key].wasCalled = false;
+	}
 }
 
 function getChangedProperties(oldState: object, newState: object): string[] {
@@ -55,64 +55,68 @@ function getChangedProperties(oldState: object, newState: object): string[] {
 	return changedProperties;
 }
 
-function updateGlobalState(newState: object, modifiedProperties: string[]) {
+function updateGlobalState(
+	newState: object,
+	modifiedProperties: string[]
+): void {
 	if (Reflect.ownKeys(globalState).length === 0) {
-		Reflect.ownKeys(newState).forEach(key =>
+		Reflect.ownKeys(newState).forEach((key: string) =>
 			Reflect.set(globalState, key, newState[key])
 		);
 	} else {
-		modifiedProperties.forEach(key =>
-			Reflect.set(globalState, key, newState[key])
-		);
+		modifiedProperties.forEach((key: string) => {
+			Reflect.set(globalState, key, newState[key]);
+		});
 	}
 }
 
 export default function useSuperState(
-	reducer: any,
-	initalState: any,
+	reducer: Reducer,
+	initalState: object,
 	props: string[]
 ) {
-	alert("init");
+	function middlereducer(state: object, action: Action): object {
+		if (action.type === UPDATE_OBTION_ID) {
+			return {
+				...globalState,
+				__obtionId__: globalState.__obtionId__
+					? globalState.__obtionId__ === 10
+						? 0
+						: globalState.__obtionId__ + 1
+					: 0
+			};
+		}
+		return reducer(state, action);
+	}
 
-	const callerFunction = useMeno(() => {
-		alert("callerFunction");
-		return new Error().stack?.split("\n")[2].trim().split(" ")[1];
-	}, [reducer, initalState, props]);
+	const [state, dispatch] = useReducer(middlereducer, initalState);
 
-	const executeSubscribe = useCallback(
-		(callerFunction: any) => {
-			alert("subscribe");
-			subscribe(props, callerFunction);
-		},
-		[callerFunction]
-	);
-	executeSubscribe(callerFunction);
+	const callerFunction = new Error().stack?.split("\n")[2].trim().split(" ")[1];
 
-	const executeInitComponet = useCallback(
-		(initalState: any) => {
-			alert("init globalState");
-			Reflect.ownKeys(initalState).forEach(e =>
-				Reflect.set(globalState, e, initalState[e])
-			);
-		},
-		[initalState]
-	);
-	executeInitComponet(initalState);
+	subscribe(props, callerFunction);
 
-	const [state, dispatch] = useReducer(reducer, initalState);
+	if (Reflect.ownKeys(globalState).length === 0) {
+		Reflect.ownKeys(initalState).forEach((e: string) =>
+			Reflect.set(globalState, e, initalState[e])
+		);
+	}
 
-	alert("execute reducer");
+	if (!subscriber[callerFunction].disp) {
+		Reflect.set(subscriber[callerFunction], "disp", dispatch);
+	}
 
-	const setDespatch = useCallback(
-		(subscriber: any, callerFunction: any, dispatch: any) => {
-			alert("set despatch");
+	return [
+		returnStateForSubscribe(globalState, callerFunction),
+		(value: object) => middledistpach(value, reducer)
+	];
+}
 
-			Reflect.set(subscriber[callerFunction], "disp", dispatch);
-		},
-		[subscriber, callerFunction, dispatch]
-	);
+function returnStateForSubscribe(state: object, callerFunction: string) {
+	const newState = {};
+	if (subscriber[callerFunction])
+		subscriber[callerFunction].props.forEach((pr: string) => {
+			Reflect.set(newState, pr, state[pr]);
+		});
 
-	setDespatch(subscriber, callerFunction, dispatch);
-
-	return [state, middleware];
+	return newState;
 }

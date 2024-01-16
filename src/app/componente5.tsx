@@ -9,12 +9,8 @@ function init() {
 }
 
 const TuComponente5 = React.memo(function TuComponente5() {
-	const [state, dispatch] = useSuperState(
-		Reducer,
-		init(),
-		["volume", "name"]
-	);
-
+	const [state, dispatch] = useSuperState(Reducer, init(), ["volume", "name"]);
+	alert("cp 5 : " + JSON.stringify(state));
 	return (
 		<div
 			style={{
@@ -45,7 +41,7 @@ const TuComponente5 = React.memo(function TuComponente5() {
 				<input
 					defaultValue={state.name}
 					onChange={event =>
-						dispatch({ type: "change_name", value: event.target.vakue })
+						dispatch({ type: "change_name", value: event.target.value })
 					}
 				/>
 			</div>

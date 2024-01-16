@@ -11,12 +11,8 @@ function init() {
 }
 
 export default function TuComponente() {
-	const [state, dispatch] = useSuperState(
-		Reducer,
-		init(),
-		["name", "age"]
-	);
-
+	const [state, dispatch] = useSuperState(Reducer, init(), ["name", "age"]);
+	alert("cp 1 : " + JSON.stringify(state));
 	return (
 		<div
 			style={{
@@ -68,7 +64,7 @@ export default function TuComponente() {
 
 export const TuComponente2 = React.memo(function TuComponente2() {
 	const [state, dispatch] = useSuperState(Reducer, init(), ["color"]);
-
+	alert("cp 2 : " + JSON.stringify(state));
 	const colors = ["yellow", "red", "blue", "green"];
 	return (
 		<div
@@ -117,12 +113,8 @@ export const TuComponente2 = React.memo(function TuComponente2() {
 });
 
 export function TuComponente3() {
-	const [state, dispatch] = useSuperState(
-		Reducer,
-		init(),
-		["color", "age"]
-	);
-
+	const [state, dispatch] = useSuperState(Reducer, init(), ["color", "age"]);
+	alert("cp 3 : " + JSON.stringify(state));
 	return (
 		<div
 			style={{
@@ -172,8 +164,8 @@ export function TuComponente3() {
 }
 
 export const TuComponente4 = React.memo(function TuComponente4() {
-	const [state, dispatch] = useSuperState(Reducer, init(), ["volume"]);
-
+	const [state, dispatch] = useSuperState(Reducer, init(), ["volume", "age"]);
+	alert("cp 4 : " + JSON.stringify(state));
 	return (
 		<div
 			style={{

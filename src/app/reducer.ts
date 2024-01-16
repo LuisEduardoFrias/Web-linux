@@ -1,3 +1,5 @@
+/** @format */
+
 export default function Reducer(state: any, action: any) {
 	const _action = {
 		up_age: () => {
