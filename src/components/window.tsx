@@ -12,8 +12,12 @@ import FileFolder from "./file_folder";
 import useSize from "hk/use_size";
 
 import { getState, getDispatch } from "hk/use_all_state";
-import { actions } from "hp/reducer";
+//import { actions } from "hp/reducer";
 import styles from "st/window.module.css";
+
+import useSuperState from "hk/use_super_state";
+import Reducer, { actions } from "hp/reducer";
+import initialState from "hp/initial_state";
 
 interface IWindowpProps {
 	wd: Wd;
@@ -22,8 +26,10 @@ interface IWindowpProps {
 }
 
 export default function Window({ wd, deskH, deskW }: IWindowpProps) {
+	const [state, dispatch] = useSuperState(Reducer, initialState(), []);
+
 	const size = useSize();
-	const state = getState();
+	//	const state = getState();
 
 	wd.size.width = wd.state === WindowState.normal ? wd.size.width : deskW;
 	wd.size.height = wd.state === WindowState.normal ? wd.size.height : deskH;

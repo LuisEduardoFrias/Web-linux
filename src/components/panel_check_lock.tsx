@@ -8,10 +8,17 @@ import styles from "st/panel_check_lock.module.css";
 import { useState } from "react";
 import useSize from "hk/use_size";
 
+import useSuperState from "hk/use_super_state";
+import Reducer, { actions } from "hp/reducer";
+import initialState from "hp/initial_state";
+
 export default function PanelChecklock() {
 	const [isClose, setIsClose] = useState(false);
 	const [isLoader, setIsLoader] = useState(true);
-	const { taskbar } = getState();
+
+	const [state, dispatch] = useSuperState(Reducer, initialState(), ["taskbar"]);
+
+	const { taskbar } = state;
 	const size = useSize();
 
 	function changeToLock() {

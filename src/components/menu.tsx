@@ -5,9 +5,12 @@ import Icon from "cp/icon";
 import Image from "next/image";
 import Mn from "md/menu";
 import { useState } from "react";
-import { actions } from "hp/reducer";
+//import { actions } from "hp/reducer";
 import { Dispatch, getState } from "hk/use_all_state";
 import styles from "st/menu.module.css";
+import useSuperState from "hk/use_super_state";
+import Reducer, { actions } from "hp/reducer";
+import initialState from "hp/initial_state";
 
 interface App {
 	name: string;
@@ -15,9 +18,13 @@ interface App {
 }
 
 export default function Menu() {
-	
-	const { menu, taskbar } = getState();
-alert("menu");
+	const [state, dispatch] = useSuperState(Reducer, initialState(), [
+		"taskbar",
+		"menu"
+	]);
+
+	const { menu, taskbar } = state;
+	alert("menu");
 	const half: number = Math.ceil(menu?.app.length / 2);
 	const firstHalf: AppMetaData[] = menu?.app.slice(0, half);
 	const secondHalf: AppMetaData[] = menu?.app.slice(half);

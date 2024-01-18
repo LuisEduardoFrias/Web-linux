@@ -4,12 +4,20 @@
 import Icon from "cp/icon";
 import styles from "st/volume.module.css";
 import { superState } from "hk/use_all_state";
+import useSuperState from "hk/use_super_state";
+import Reducer, { actions } from "hp/reducer";
+import initialState from "hp/initial_state";
 
 export default function Volume() {
-	const [taskbar, setState] = superState("taskbar", "Volume");
-	
+	const [state, dispatch] = useSuperState(Reducer, initialState(), [
+		"taskbar",
+		"Volume"
+	]);
+	const { taskbar, setState } = state;
+	//	const [taskbar, setState] = superState("taskbar", "Volume");
+
 	alert("volume");
-	
+
 	const _style = {
 		width: "200px", //`${panelvolum.size.w}px`,
 		height: "50px", //`${panelvolum.size.h}px`,

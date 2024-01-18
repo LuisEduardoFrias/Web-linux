@@ -6,17 +6,23 @@ import Logo from "cp/logo";
 import Input from "cp/input";
 import Form from "cp/form";
 //
-import { actions } from "hp/reducer";
+//import { actions } from "hp/reducer";
+import useSuperState from "hk/use_super_state";
+import Reducer, { actions } from "hp/reducer";
+import initialState from "hp/initial_state";
 import { Dispatch } from "hk/use_all_state";
 import styles from "st/lock.module.css";
 
 export default function Lock() {
+	const [state, dispatch] = useSuperState(Reducer, initialState(), []);
+
+	
 	function handleSubmit(
 		data: object[],
 		setLoader: (show: boolean) => void
 	): boolean {
 		setTimeout(() => {
-			Dispatch({
+			dispatch({
 				type: actions.unblock,
 				user: data.user,
 				password: data.password

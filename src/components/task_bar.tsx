@@ -8,12 +8,17 @@ import Desktops from "cp/desktops";
 import SettingsBar from "cp/settings_bar";
 //
 import Br from "md/task_bar";
-import { actions } from "hp/reducer";
+//import { actions } from "hp/reducer";
 import { getState } from "hk/use_all_state";
 import styles from "st/tackback.module.css";
+import useSuperState from "hk/use_super_state";
+import Reducer, { actions } from "hp/reducer";
+import initialState from "hp/initial_state";
 
 export default function TaskBar() {
-	const { taskbar } = getState();
+	const [state, dispatch] = useSuperState(Reducer, initialState(), ["taskbar"]);
+
+	const { taskbar } = state;
 
 	const _style = {
 		height: `${taskbar.size.height}px`

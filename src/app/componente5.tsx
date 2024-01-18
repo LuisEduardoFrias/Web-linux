@@ -8,7 +8,7 @@ function init() {
 	return { name: "luis", age: 17, color: "yellow", volume: 30 };
 }
 
-const TuComponente5 = React.memo(function TuComponente5() {
+const YouComponent5 = React.memo(function YouComponent5() {
 	const [state, dispatch] = useSuperState(Reducer, init(), ["volume", "name"]);
 	alert("cp 5 : " + JSON.stringify(state));
 	return (

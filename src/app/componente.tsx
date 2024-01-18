@@ -2,7 +2,7 @@
 "use client";
 
 import React, { Suspense, lazy } from "react";
-const TuComponente5 = React.lazy(() => import("./componente5"));
+const YouComponent5 = React.lazy(() => import("./componente5"));
 import useSuperState from "./superState";
 import Reducer from "./reducer";
 
@@ -10,7 +10,7 @@ function init() {
 	return { name: "luis", age: 17, color: "yellow", volume: 30 };
 }
 
-export default function TuComponente() {
+export default function YouComponent() {
 	const [state, dispatch] = useSuperState(Reducer, init(), ["name", "age"]);
 	alert("cp 1 : " + JSON.stringify(state));
 	return (
@@ -62,7 +62,7 @@ export default function TuComponente() {
 	);
 }
 
-export const TuComponente2 = React.memo(function TuComponente2() {
+export const YouComponent2 = React.memo(function YouComponent2() {
 	const [state, dispatch] = useSuperState(Reducer, init(), ["color"]);
 	alert("cp 2 : " + JSON.stringify(state));
 	const colors = ["yellow", "red", "blue", "green"];
@@ -112,7 +112,7 @@ export const TuComponente2 = React.memo(function TuComponente2() {
 	);
 });
 
-export function TuComponente3() {
+export function YouComponent3() {
 	const [state, dispatch] = useSuperState(Reducer, init(), ["color", "age"]);
 	alert("cp 3 : " + JSON.stringify(state));
 	return (
@@ -156,14 +156,14 @@ export function TuComponente3() {
 				<span>{state?.age >= 18 ? "Mayor de edad" : "Menor de edad"}</span>
 				<hr />
 				<Suspense fallback={<div>Loading...</div>}>
-					<TuComponente5 />
+					<YouComponent5 />
 				</Suspense>
 			</div>
 		</div>
 	);
 }
 
-export const TuComponente4 = React.memo(function TuComponente4() {
+export const YouComponent4 = React.memo(function YouComponent4() {
 	const [state, dispatch] = useSuperState(Reducer, init(), ["volume", "age"]);
 	alert("cp 4 : " + JSON.stringify(state));
 	return (

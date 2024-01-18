@@ -1,12 +1,17 @@
 /** @format */
 import { getState, Dispatch } from "hk/use_all_state";
-import { actions } from "hp/reducer";
+//import Icon from "cp/icon";
 import Icon from "cp/icon";
 import DateTime from "cp/datetime";
 import useSize from "hk/use_size";
+import useSuperState from "hk/use_super_state";
+import Reducer, { actions } from "hp/reducer";
+import initialState from "hp/initial_state";
 
 export default function SettingsBar() {
-	const { taskbar } = getState();
+	const [state, dispatch] = useSuperState(Reducer, initialState(), ["taskbar"]);
+
+	const { taskbar } = state;
 	const { width } = useSize();
 
 	let iconVolume: string = "";
@@ -21,14 +26,14 @@ export default function SettingsBar() {
 		iconVolume = "volume_off";
 	}
 
- 	return (
- 		<>
- 		  	{width > 480 && <DateTime />}
- 		  	<Icon onclick={() => taskbar.showInfoPanel()}>info</Icon>
- 		  	<Icon onclick={() => taskbar.showVolumePanel()}>{iconVolume}</Icon>
- 		  	<div className='divider'></div>
- 		  	<Icon onclick={() => taskbar.showLockCheckPanel()}>lock</Icon>
-{		/*	<Icon>power_settings_new</Icon> */}
- 		</>
- 	);
+	return (
+		<>
+			{width > 480 && <DateTime />}
+			<Icon onclick={() => taskbar.showInfoPanel()}>info</Icon>
+			<Icon onclick={() => taskbar.showVolumePanel()}>{iconVolume}</Icon>
+			<div className='divider'></div>
+			<Icon onclick={() => taskbar.showLockCheckPanel()}>lock</Icon>
+			{/*	<Icon>power_settings_new</Icon> */}
+		</>
+	);
 }

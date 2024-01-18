@@ -3,7 +3,6 @@
 
 import Draggable from "react-draggable";
 import { useEffect } from "react";
-import TuComponente from "./componente";
 //
 import TaskBar from "cp/task_bar";
 import Screen from "cp/screen";
@@ -17,16 +16,40 @@ import PanelChecklock from "cp/panel_check_lock";
 //
 import { Get } from "hp/fetch";
 import useAllState from "hk/use_all_state";
+import useSuperState from "hk/use_super_state";
+import Reducer, { actions } from "hp/reducer";
+import initialState from "hp/initial_state";
 import styles from "st/core.module.css";
+import { getDataStorage } from "hk/use_storage";
+import { Post } from "hp/fetch";
 
 export default function Core() {
-	const state = useAllState();
+	const [state, dispatch] = useSuperState(Reducer, initialState(), [
+		"loading",
+		"unblock"
+	]);
+
+	const _state = useAllState();
 
 	alert("core");
 
 	useEffect(() => {
 		//alert("core: " + JSON.stringify());
-		alert("core 2: ");
+
+		const storage = getDataStorage(process.env.NEXT_PUBLIC_.LOGIN_KEY);
+
+		Post("token_check", {
+			token: storage.login_key
+		}).then(resp => {
+			setTimeout(() => {
+				alert("dispatch: " + resp.unblock);
+				dispatch({
+					type: actions.loginKey,
+					unblock: !resp.unblock,
+					loading: false
+				});
+			}, 1500);
+		});
 	}, []);
 
 	/*	useEffect(() => {
@@ -44,19 +67,18 @@ export default function Core() {
 		<div className={styles.core}>
 			{
 				<Screen>
-					{
-						/*!state.unblock*/ false ? (
-							<>
-								<LdDualRing show={state.loading} />
-								<Lock />
-							</>
-						) : (
-							<>
-								<TaskBar />
-								<div className={styles.container_desk}>
-									<div>
-										<TuComponente />
-										{/*
+					{!state.unblock ? (
+						<>
+							<LdDualRing show={state.loading} />
+							<Lock />
+						</>
+					) : (
+						<>
+							<TaskBar />
+							<div className={styles.container_desk}>
+								<div>
+
+									{/*
 									state.desks.map((desk_: Dk, index: number) => {
 									if (desk_.key === talkback.desktop.key)
 										return (
@@ -71,15 +93,14 @@ export default function Core() {
 											</div>
 										);
 								}) */}
-										{/*state.taskbar.panel_menu true && <Menu /> */}
-										{/*state.taskbar.panel_volume*/ true && <Volume />}
-										{/*state.taskbar.panel_info*/ true && <Info />}
-									</div>
-									{/* state.taskbar.panel_checklock && <PanelChecklock /> */}
+									{/*state.taskbar.panel_menu true && <Menu /> */}
+									{/*state.taskbar.panel_volume*/ true && <Volume />}
+									{/*state.taskbar.panel_info*/ true && <Info />}
 								</div>
-							</>
-						)
-					}
+								{/* state.taskbar.panel_checklock && <PanelChecklock /> */}
+							</div>
+						</>
+					)}
 				</Screen>
 			}
 		</div>

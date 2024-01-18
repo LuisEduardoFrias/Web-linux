@@ -7,9 +7,14 @@ import LdDualRing from "cp/ld_dual_ring";
 import Icon from "cp/icon";
 import styles from "st/info.module.css";
 import { getState } from "hk/use_all_state";
+import useSuperState from "hk/use_super_state";
+import Reducer, { actions } from "hp/reducer";
+import initialState from "hp/initial_state";
 
 export default function Info() {
-	const { taskbar } = getState();
+	const [state, dispatch] = useSuperState(Reducer, initialState(), ["taskbar"]);
+
+	const { taskbar } = state;
 	const [info, setInfo] = useState(null);
 
 	alert("info");
@@ -43,7 +48,6 @@ export default function Info() {
 		</div>
 	);
 }
-
 
 function firtsUpperCase(key: string): string {
 	return `${key.substring(0, 1).toUpperCase()}${key.substring(1, key.length)}`;
