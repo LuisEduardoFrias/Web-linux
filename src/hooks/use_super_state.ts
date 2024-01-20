@@ -93,7 +93,12 @@ function updateGlobalState(
 export default function useSuperState(
 	reducer: Reducer,
 	initalState: object,
-	props: string[]
+	props: string[],
+	postDispatch?: (
+		action: Action,
+		state: object,
+		dispatch: (action: Action) => void
+	) => void
 ) {
 	function middlereducer(state: object, action: Action): object {
 		//se ejecuta cuando se requiere actializar el estado de determ8nado suscriptor
@@ -114,9 +119,9 @@ export default function useSuperState(
 
 	const [state, dispatch] = useReducer(middlereducer, initalState);
 
-	console.log("state updated");
-	//Octiene el nombre del componente
-	const callerFunction = new Error().stack?.split("\n")[2].trim().split(" ")[1];
+//	console.log("state updated");
+  	//Octiene el nombre del componente
+  	const callerFunction = new Error().stack?.split("\n")[2].trim().split(" ")[1];
 
 	//suscribe el componentes
 	subscribe(props, callerFunction, dispatch);
@@ -135,7 +140,15 @@ export default function useSuperState(
 
 	return [
 		returnStateForSubscribe(globalState, callerFunction),
-		(value: Action) => middledistpach(value, reducer)
+		(action: Action) => {
+			if (postDispatch) {
+				postDispatch(action, globalState, (_action: Action) => {
+					middledistpach(_action, reducer);
+				});
+			} else {
+				middledistpach(action, reducer);
+			}
+		}
 	];
 }
 

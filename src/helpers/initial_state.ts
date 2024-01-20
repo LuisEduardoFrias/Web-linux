@@ -4,11 +4,14 @@ import Tb, { Position } from "md/task_bar";
 import Dk from "md/desk";
 import File from "md/file";
 import Folder from "md/folder";
+import AppMetaData from "md/app_meta_data";
+import Menu from "md/menu";
 import Point from "md/point";
 import Size from "md/size";
 import Wd from "md/window";
 
 export default function initialState() {
+	//
 	const TbPoint: Point = new Point(0, 0);
 	const DkFile = new File(new Point(10, 10), null, "app", "txt");
 	const desk1: Dk = new Dk([DkFile], "screen1");
@@ -19,6 +22,10 @@ export default function initialState() {
 	desk1.openWindows.push(
 		new Wd("jemplo", "", new Point(0, 0), new Size(100, 100), [])
 	);
+
+	const apps: AppMetaData[] = [];
+	const menu = new Menu(apps);
+
 	//const panelPoint:Point = new Point(-30, 0);
 	//const panelSize:Size = new Size(200,50);
 	//const menuPoint:Point = new Point(0, 0);
@@ -29,7 +36,8 @@ export default function initialState() {
 		desks: [desk1, desk2, desk3, desk4],
 		taskbar: new Tb(30, desk1, TbPoint, 80),
 		unblock: false,
-		loading: false
+		loading: false,
+		menu
 		/*initDt: new Dt(500, 250),
   confLock: new Lk(),
   confPanel: new Panel(panelPoint, panelSize),

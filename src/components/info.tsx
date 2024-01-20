@@ -1,6 +1,7 @@
 /** @format */
 
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { Get } from "hp/fetch";
 import LdDualRing from "cp/ld_dual_ring";
@@ -14,18 +15,17 @@ import initialState from "hp/initial_state";
 export default function Info() {
 	const [state, dispatch] = useSuperState(Reducer, initialState(), ["taskbar"]);
 
-	const { taskbar } = state;
 	const [info, setInfo] = useState(null);
+	const { taskbar } = state;
 
-	alert("info");
 	const _style: React.CSSProperties = {
-		width: "150px", //`${panelvolum.size.w}px`,
-		height: "150px", //`${panelvolum.size.h}px`,
-		right: "10px", //`${panelvolum.point.x}px`,
-		top: "2px", //`${panelvolum.point.y}px`,
-		//display: taskbar.panel_volume ? "block" : "none",
+		width: "150px",
+		height: "150px",
+		right: "10px",
+		top: `${taskbar.panel_info ? "4px" : "-400px"}`,
 		opacity: taskbar.panel_info ? "1" : "0"
 	};
+
 	useEffect(() => {
 		(async () => {
 			setInfo(await Get("info"));
@@ -37,7 +37,7 @@ export default function Info() {
 			{info ? (
 				<div className={styles.content}>
 					{Reflect.ownKeys(info).map((key, index) => (
-						<div>
+						<div key={index}>
 							<span>{firtsUpperCase(key)}</span>:<span> {info[key]}</span>
 						</div>
 					))}

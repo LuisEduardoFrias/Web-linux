@@ -1,4 +1,8 @@
-/** 8@format */
+/**
+ * 8@format
+ *
+ * @format
+ */
 
 .container_screen {
 	position: absolute;
@@ -15,6 +19,7 @@
 	);
 	backdrop-filter: blur(0.7px);
 	overflow-x: auto;
+  transition: opacity 1s ease;
 	z-index: 98;
 }
 

@@ -8,6 +8,7 @@
 	box-sizing: border-box;
 	border-radius: 3px;
 	box-shadow: 0 0 5px 1px #273755;
+transition: opacity ease 1s;
 
 	display: flex;
 	flex-direction: column;

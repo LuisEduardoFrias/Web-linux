@@ -5,7 +5,7 @@ import styles from "st/logo.module.css";
 
 export default function Logo() {
 	return (
-		<div div className={styles.container}>
+		<div className={styles.container}>
 			<Icon className={styles.pets}>pets</Icon>
 			<Icon className={styles.bug}>bug_report</Icon>
 		</div>

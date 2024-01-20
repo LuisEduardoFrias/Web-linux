@@ -5,8 +5,7 @@ import Icon from "cp/icon";
 import Image from "next/image";
 import Mn from "md/menu";
 import { useState } from "react";
-//import { actions } from "hp/reducer";
-import { Dispatch, getState } from "hk/use_all_state";
+
 import styles from "st/menu.module.css";
 import useSuperState from "hk/use_super_state";
 import Reducer, { actions } from "hp/reducer";
@@ -24,19 +23,19 @@ export default function Menu() {
 	]);
 
 	const { menu, taskbar } = state;
-	alert("menu");
-	const half: number = Math.ceil(menu?.app.length / 2);
-	const firstHalf: AppMetaData[] = menu?.app.slice(0, half);
-	const secondHalf: AppMetaData[] = menu?.app.slice(half);
+
+	const half: number = Math.ceil(menu.apps?.length / 2);
+
+	const firstHalf: AppMetaData[] = menu.apps?.slice(0, half);
+	const secondHalf: AppMetaData[] = menu.apps?.slice(half);
 
 	const _style = {
-		transition: "opacity ease 1s",
-		//	display: taskbar.panel_menu ? "block" : "none",
+		top: taskbar.panel_menu ? "0px" : "-10000px",
 		opacity: taskbar.panel_menu ? "1" : "0"
 	};
 
 	function handleClick(_app: AppMetaData): void {
-		//	Dispatch({ type: actions.openApp, app: _app });
+		dispatch({ type: actions.openApp, app: _app });
 	}
 
 	function Row({ half }: AppMetaData[]): JSX.Element {
@@ -50,7 +49,7 @@ export default function Menu() {
 							handleClick(_app);
 						}}>
 						<Image
-							src={_app.img}
+							src={_app.iconPath}
 							alt={_app.name}
 							width={100}
 							height={100}

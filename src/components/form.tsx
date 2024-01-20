@@ -6,6 +6,7 @@ import React, {
 	useState,
 	useEffect,
 	useRef,
+	createRef,
 	ReactElement,
 	ChangeEvent
 } from "react";
@@ -34,11 +35,13 @@ interface IFormsProp<T> {
 export default function Form<T>(props: IFormsProp<T>): ReactElement {
 	const [state, setState] = useState<T[]>([]);
 	const [childRequired, setChildRequired] = useState<ChildRequired[]>([]);
+
 	const itemsRef = useRef([]);
 
-	useEffect(() => {
-		itemsRef.current = itemsRef.current.slice(0, props.children.length);
+	/*	useEffect(() => {
+	  	itemsRef.current = itemsRef.current.slice(0, props.children.length);
 	}, []);
+	*/
 
 	const formComponents = Array.isArray(props.children)
 		? props.children
@@ -48,9 +51,7 @@ export default function Form<T>(props: IFormsProp<T>): ReactElement {
 		addOnChangeToFormComponents(child, index, setState, itemsRef, childRequired)
 	);
 
-	const formComponentsWithOnChange: any = resp.map(
-		e => e.formComponentsWithOnChange
-	);
+	const ClonedComponents: any = resp.map(e => e.clonedComponents);
 
 	const defaultState_: any = resp
 		.map(e => e.defaultState)
@@ -60,6 +61,8 @@ export default function Form<T>(props: IFormsProp<T>): ReactElement {
 			Reflect.set(newObj, e.key, e.value);
 			return newObj;
 		});
+
+	alert("defaultState: " + JSON.stringify(defaultState_));
 
 	let childRequired_: object[] = [];
 	resp.map(e => {
@@ -74,7 +77,7 @@ export default function Form<T>(props: IFormsProp<T>): ReactElement {
 
 	return (
 		<__Form__
-			formComponentsWithOnChange={formComponentsWithOnChange}
+			ClonedComponents={ClonedComponents}
 			itemsRef={itemsRef}
 			setState={setState}
 			childRequired={childRequired}
@@ -89,7 +92,7 @@ export default function Form<T>(props: IFormsProp<T>): ReactElement {
 }
 
 function __Form__({
-	formComponentsWithOnChange,
+	ClonedComponents,
 	itemsRef,
 	defaultState_,
 	setState,
@@ -100,7 +103,7 @@ function __Form__({
 	childRequired_,
 	onSubmit
 }: {
-	formComponentsWithOnChange: any;
+	ClonedComponents: any;
 	itemsRef: any;
 	defaultState_: object[];
 	setState: any;
@@ -147,7 +150,7 @@ function __Form__({
 					);
 				}}
 				className={className}>
-				{formComponentsWithOnChange}
+				{ClonedComponents}
 			</form>
 		</>
 	);
@@ -345,9 +348,9 @@ function addOnChangeToFormComponents(
 	}
 
 	if (cloneChild.props.required === true) {
-		const resp = addRequiredItem(cloneChild, itemsRef);
-		cloneChild = resp.clone;
-		_childRequired = resp.childRequired;
+		/*	const resp = addRequiredItem(cloneChild, itemsRef);
+	  	cloneChild = resp.clone;
+	  	_childRequired = resp.childRequired;*/
 	}
 
 	if (cloneChild.props.defaultValue) {
@@ -358,14 +361,13 @@ function addOnChangeToFormComponents(
 	}
 
 	const count = React.Children.count(cloneChild.props.children);
-
 	if (count > 0) {
 		const resp = React.Children.map(
 			cloneChild.props.children,
 			(child: ReactElement, index: number) => {
 				if (!React.isValidElement(child))
 					return {
-						formComponentsWithOnChange: child,
+						clonedComponents: child,
 						defaultState: null,
 						childRequired: null
 					};
@@ -379,42 +381,31 @@ function addOnChangeToFormComponents(
 				);
 
 				return {
-					formComponentsWithOnChange: resp.formComponentsWithOnChange,
+					clonedComponents: resp.clonedComponents,
 					defaultState: resp.defaultState,
 					childRequired: resp.childRequired
 				};
 			}
 		);
 
-		const formComponentsWithOnChange_: any = resp.map(
-			e => e.formComponentsWithOnChange
-		);
+		const clonedComponents_: any = resp.map(e => e.clonedComponents);
+		cloneChild = React.cloneElement(cloneChild, {}, ...clonedComponents_);
+
 		const defaultState_: any = resp
 			.map(e => e.defaultState)
 			.filter(e => e !== null);
+		alert("agregando de: " + JSON.stringify(defaultState_));
 		const childRequired_: any = resp
 			.map(e => e.childRequired)
 			.filter(e => e !== null);
 
-		cloneChild = React.cloneElement(
-			cloneChild,
-			{},
-			...formComponentsWithOnChange_
-		);
-
-		if (cloneChild.props.onChange === undefined) {
-			cloneChild = React.cloneElement(cloneChild, {
-				onChange: (e: any) =>
-					handleChange2(e, change, setState, itemsRef, childRequired),
-				key: index
-			});
-		}
-
 		const answer: any = {
-			formComponentsWithOnChange: cloneChild,
+			clonedComponents: cloneChild,
 			defaultState:
 				defaultState_.length > 0
-					? [...defaultState_, _defaultState]
+					? _childRequired !== null
+						? [...defaultState_, _defaultState]
+						: defaultState_
 					: _defaultState,
 			childRequired:
 				childRequired_.length > 0
@@ -427,19 +418,17 @@ function addOnChangeToFormComponents(
 		return answer;
 	}
 
-	if (Reflect.ownKeys(cloneChild.props).filter(e => "onChange").length === 1) {
+	if (cloneChild.props.onChange === undefined) {
 		cloneChild = React.cloneElement(cloneChild, {
 			onChange: (e: any) =>
 				handleChange2(e, change, setState, itemsRef, childRequired),
 			key: index
 		});
-
-		return {
-			formComponentsWithOnChange: cloneChild,
-			defaultState: _defaultState,
-			childRequired: _childRequired
-		};
 	}
 
-	return cloneChild;
+	return {
+		clonedComponents: cloneChild,
+		defaultState: _defaultState,
+		childRequired: _childRequired
+	};
 }

@@ -9,18 +9,15 @@ import Reducer, { actions } from "hp/reducer";
 import initialState from "hp/initial_state";
 
 export default function HomeButton() {
-	const [state, dispatch] = useSuperState(Reducer, initialState(), [
-		"taskbar",
-	]);
-	
-	
+	const [state, dispatch] = useSuperState(Reducer, initialState(), ["taskbar"]);
+
 	const { taskbar } = state;
 	return (
 		<>
 			<div
 				className={styles.home}
 				onClick={() => {
-					taskbar.showPanelMenu();
+					dispatch({ type: actions.showPanelMenu, value: !taskbar.panel_menu });
 				}}>
 				<Icon className={styles.pets}>pets</Icon>
 				<Icon className={styles.bug}>bug_report</Icon>

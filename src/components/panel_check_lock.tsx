@@ -3,7 +3,7 @@
 "use client";
 import LdDualRing from "cp/ld_dual_ring";
 import CardNotification, { ModalType } from "cp/card_notification";
-import { getState } from "hk/use_all_state";
+
 import styles from "st/panel_check_lock.module.css";
 import { useState } from "react";
 import useSize from "hk/use_size";
@@ -11,19 +11,25 @@ import useSize from "hk/use_size";
 import useSuperState from "hk/use_super_state";
 import Reducer, { actions } from "hp/reducer";
 import initialState from "hp/initial_state";
+import Middleware from "hp/middleware";
 
 export default function PanelChecklock() {
 	const [isClose, setIsClose] = useState(false);
 	const [isLoader, setIsLoader] = useState(true);
 
-	const [state, dispatch] = useSuperState(Reducer, initialState(), ["taskbar"]);
+	const [state, dispatch] = useSuperState(
+		Reducer,
+		initialState(),
+		["taskbar"],
+		Middleware
+	);
 
 	const { taskbar } = state;
 	const size = useSize();
 
 	function changeToLock() {
 		setTimeout(() => {
-			taskbar.lock();
+			dispatch({ type: actions.lock, islock: true });
 			//setIsClose(false);
 			setIsLoader(false);
 		}, 3000);
@@ -31,7 +37,11 @@ export default function PanelChecklock() {
 
 	const _styles: React.CSSProperties = {
 		width: `${size.width}px`,
-		height: `${size.height}px`
+		height: `${size.height}px`,
+		transition: "opacity 1s ease",
+		position: "absolute",
+		top: `${taskbar.panel_checklock ? "0px" : "-10000px"}`,
+		opacity: `${taskbar.panel_checklock ? "1" : "0"}`
 	};
 
 	return (
@@ -51,7 +61,10 @@ export default function PanelChecklock() {
 						setIsClose(true);
 					}}
 					onClick2={(event: any) => {
-						taskbar.showLockCheckPanel();
+						dispatch({
+							type: actions.showLockCheckPanel,
+							value: !taskbar.panel_checklock
+						});
 					}}
 				/>
 			)}

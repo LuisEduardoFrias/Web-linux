@@ -1,7 +1,7 @@
 /** @format */
 
-import Point from "./point";
-import BaseObject from "./base_object";
+import Point from "md/point";
+import BaseObject from "md/base_object";
 
 export default class Folder extends BaseObject {
 	title: string;

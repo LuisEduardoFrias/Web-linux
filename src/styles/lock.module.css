@@ -10,13 +10,31 @@
 	align-items: center;
 }
 
-.lock form {
+.form_ {
 	width: 200px;
 	height: 250px;
 	box-shadow: 0 0 4px 1px var(--theme3ro);
 	border-radius: 5px;
 	padding: 10px;
 
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 15px;
+}
+
+.hidden {
+	position: absolute;
+	top: -10000px;
+	opacity: 0;
+}
+
+.lock form {
+	width: 200px;
+	height: 250px;
+	padding: 10px;
+	border: 0px solid red;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;

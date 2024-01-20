@@ -19,9 +19,9 @@ export enum actions {
 	changeVolume = "changeVolume",
 	showLockCheckPanel = "showLockCheckPanel",
 	lock = "lock",
-	showInfoPanel = "showInfoPanel"
+	showInfoPanel = "showInfoPanel",
+	openApp = "openApp"
 	/*
-	openApp = "openApp",
 	closeApp = "closeApp",
 	normalApp = "normalApp",
 	openFolder = "openFolder"*/
@@ -31,6 +31,7 @@ export default function Reducer(state, action) {
 	const _state = { ...state };
 	const _actions = {
 		unblock: () => {
+			_state.menu.apps = action.apps;
 			return { ..._state, unblock: action.unblock };
 		},
 		lock() {
@@ -38,6 +39,7 @@ export default function Reducer(state, action) {
 			return { ..._state, unblock: false };
 		},
 		loginKey: () => {
+			_state.menu.apps = action.apps;
 			return { ..._state, unblock: action.unblock, loading: action.loading };
 		},
 		showPanelMenu: () => {
@@ -66,20 +68,13 @@ export default function Reducer(state, action) {
 			desTaskBarProp(_state, ["panel_info"], action.value);
 			return { ..._state };
 		},
-		/*	
 		openApp: () => {
-			const desk = _state[_state.bar.desktop];
-
-			desk.addWindow(
-				new Wa(Guid.create().toString(), action.app.name, action.app.file),
-				_state.initDt.size.w,
-				_state.initDt.size.y - _state.bar.h
-			);
-
-			if (_state.bar.showPanelMenu) _state.bar.showMenu(false);
+			_state.desks[_state.taskbar.desktop].addWindow(action.app.name);
+			_state.taskbar.panel_menu = false;
 
 			return { ..._state };
 		},
+		/*	
 		openFolder: () => {
 			const desk = _state[_state.bar.desktop];
 

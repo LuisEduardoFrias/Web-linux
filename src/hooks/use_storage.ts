@@ -6,6 +6,7 @@ export function getDataStorage(key: string) {
 		return value ? JSON.parse(value) : null;
 	} catch (error) {
 		console.log(error);
+		getDataStorage(key) 
 	}
 }
 
@@ -14,6 +15,7 @@ export function setDataStorage(key: string, data: object) {
 		localStorage.setItem(key, JSON.stringify(data));
 	} catch (error) {
 		console.log(error);
+		setDataStorage(key, data) 
 	}
 }
 

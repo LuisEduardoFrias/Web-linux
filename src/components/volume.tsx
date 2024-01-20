@@ -16,20 +16,16 @@ export default function Volume() {
 	const { taskbar, setState } = state;
 	//	const [taskbar, setState] = superState("taskbar", "Volume");
 
-	alert("volume");
-
 	const _style = {
-		width: "200px", //`${panelvolum.size.w}px`,
-		height: "50px", //`${panelvolum.size.h}px`,
-		right: "-30px", //`${panelvolum.point.x}px`,
-		top: "0px", //`${panelvolum.point.y}px`,
-		//display: taskbar.panel_volume ? "block" : "none",
-		opacity: taskbar.panel_volume ? "1" : "0",
-		transition: "opacity ease 1s"
+		width: "200px",
+		height: "50px",
+		right: "-30px",
+		top: `${taskbar.panel_volume ? "0px" : "-400px"}`,
+		opacity: taskbar.panel_volume ? "1" : "0"
 	};
 
 	function handleChange(event: any) {
-		taskbar.changeVolume(event.target.value);
+		dispatch({ type: actions.changeVolume, value: event.target.value });
 	}
 
 	return (

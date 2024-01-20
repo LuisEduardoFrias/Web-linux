@@ -14,14 +14,14 @@ export default class Window extends BaseObsject {
 	title: string;
 	url: string;
 	state: State;
-	fileFolders: (File | Forder)[];
+	fileFolders: (File | Forder)[] | undefined;
 
 	constructor(
 		title: string,
 		url: string,
 		point: Point,
 		size: Size,
-		fileFolders: (File | Forder)[]
+		fileFolders?: (File | Forder)[]
 	) {
 		super(point, size);
 		this.title = title;

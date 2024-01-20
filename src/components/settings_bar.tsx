@@ -1,6 +1,6 @@
 /** @format */
+
 import { getState, Dispatch } from "hk/use_all_state";
-//import Icon from "cp/icon";
 import Icon from "cp/icon";
 import DateTime from "cp/datetime";
 import useSize from "hk/use_size";
@@ -29,10 +29,34 @@ export default function SettingsBar() {
 	return (
 		<>
 			{width > 480 && <DateTime />}
-			<Icon onclick={() => taskbar.showInfoPanel()}>info</Icon>
-			<Icon onclick={() => taskbar.showVolumePanel()}>{iconVolume}</Icon>
+			<Icon
+				onclick={() =>
+					dispatch({
+						type: actions.showInfoPanel,
+						value: !taskbar.panel_info
+					})
+				}>
+				info
+			</Icon>
+			<Icon
+				onclick={() =>
+					dispatch({
+						type: actions.showVolumePanel,
+						value: !taskbar.panel_volume
+					})
+				}>
+				{iconVolume}
+			</Icon>
 			<div className='divider'></div>
-			<Icon onclick={() => taskbar.showLockCheckPanel()}>lock</Icon>
+			<Icon
+				onclick={() =>
+					dispatch({
+						type: actions.showLockCheckPanel,
+						value: !taskbar.panel_checklock
+					})
+				}>
+				lock
+			</Icon>
 			{/*	<Icon>power_settings_new</Icon> */}
 		</>
 	);

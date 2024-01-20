@@ -1,10 +1,12 @@
 /** @format */
 import { Guid } from "guid-typescript";
 
-import Folder from "./folder";
-import File from "./file";
-import Point from "./point";
-import Window from "./window";
+import Folder from "md/folder";
+import AppMetaData from "md/app_meta_data";
+import File from "md/file";
+import Point from "md/point";
+import Size from "md/size";
+import Window from "md/window";
 
 export default class Desk {
 	key: string;
@@ -17,5 +19,11 @@ export default class Desk {
 		this.fileFolders = fileFolders;
 		this.name = desktop;
 		this.openWindows = [];
+	}
+
+	async addWindow(app: AppMetaData) {
+		this.openWindows.push(
+			new Window(app.name, app.file, new Point(0, 0), new Size(300, 100))
+		);
 	}
 }
