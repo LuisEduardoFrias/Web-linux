@@ -33,8 +33,8 @@ export default function Terminal(props: ITerminalProps): JSX.Element {
 	}, [prompt, lines]);
 
 	const _style = {
-		width: `${props.width ?? 100}px`,
-		height: `${props.height ?? 100}px`,
+		//width: `${props.width ?? 100}%`,
+		//height: `${props.height ?? 100}%`,
 		lineHeight: "2"
 	};
 

@@ -19,9 +19,7 @@ export default function initialState() {
 	const desk3: Dk = new Dk([], "screen3");
 	const desk4: Dk = new Dk([], "screen4");
 
-	desk1.openWindows.push(
-		new Wd("jemplo", "", new Point(0, 0), new Size(100, 100), [])
-	);
+	//desk1.addWindow({ name: "jemplo", iconPath: "string", iswindow: true });
 
 	const apps: AppMetaData[] = [];
 	const menu = new Menu(apps);

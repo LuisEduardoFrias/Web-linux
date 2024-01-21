@@ -2,8 +2,8 @@
 
 import { NextResponse } from "next/server";
 import { read, write } from "sv/rw";
-import { readdirSync } from "fs";
 import path from "path";
+import { readdirSync } from "fs";
 
 export async function POST(request: any) {
 	const { login_key } = await request.json();
@@ -21,7 +21,7 @@ export async function POST(request: any) {
 				name: e,
 				iconPath: manifest.icon,
 				iswindow: true,
-				file: path.join(process.env.INTERNAL_APPS, `${e}/${manifest.app}`)
+				file: path.join(e,manifest.app)
 			};
 
 			if (manifest.user === "all") {

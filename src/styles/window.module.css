@@ -1,137 +1,141 @@
+/** @format */
 
 .window {
- position: absolute;
- border: 1px solid black;
- box-sizing: border-box;
- box-shadow: 0 0 5px 1px #273755;
- border-radius: 3px;
- z-index: 2;
- 
- display: flex;
- flex-direction: column;
- gap: 0;
+	position: absolute;
+	border: 1px solid black;
+	box-sizing: border-box;
+	box-shadow: 0 0 5px 1px #273755;
+	border-radius: 3px;
+	z-index: 2;
+	transition: width height 1s ease;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
 
- 
- & .bar {
-  background-color: #294986;
-  width: 100%;
-  height: 20px;
-  box-sizing: border-box;
-  border-radius: 3px 3px 0 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 1fr;
-  grid-template-areas: ". title size";
-  
-  & .contro_size {
-   grid-area: size;
-   justify-self: end;
-   position: relative;
-   box-sizing: border-box;
-   height: 100%;
-   width: 50px;
-   border-radius: 0 2px 0 0;
-   
-   
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   
-   & .icon {
-    box-sizing: border-box;
-    width: 20px;
-    height: 20px;
-    
-    border-radius: 50%;
-    margin: 0;
-    padding: 0;
-    transform: scale(.5);
-    position: relative;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	& .bar {
+		background-color: #294986;
+		width: 100%;
+		height: 20px;
+		box-sizing: border-box;
+		border-radius: 3px 3px 0 0;
+		display: grid;
+		grid-template-columns: 1fr 50px;
+		grid-template-rows: 1fr;
+		grid-template-areas: "title size";
 
-   }
-   
-   & .icon:active {
-    background-color: #4988ff;
-   }
-  }
- }
- 
- & .container {
-  position: relative;
-  width: 100%;
-  height: calc(100% - 30px);
-  border-radius: 0 0 3px 3px;
-  background-color: #ffffff;
-  filter: blur(0.5);
-  box-sizing: border-box;
- }
+		& .contro_size {
+			grid-area: size;
+			justify-self: end;
+			position: relative;
+			box-sizing: border-box;
+			height: 100%;
+			width: 50px;
+			border-radius: 0 2px 0 0;
+
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			& .icon {
+				box-sizing: border-box;
+				width: 20px;
+				height: 20px;
+
+				border-radius: 50%;
+				margin: 0;
+				padding: 0;
+				transform: scale(0.5);
+				position: relative;
+
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			& .icon:active {
+				background-color: #4988ff;
+			}
+		}
+	}
+
+	& .container {
+		position: relative;
+		width: 100%;
+		height: calc(100% - 30px);
+		border-radius: 0 0 3px 3px;
+		background-color: #ffffff;
+		filter: blur(0.5);
+		box-sizing: border-box;
+	}
+}
+
+.handle_ {
+	text-align: center;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .bar span {
- grid-area: title;
- font-size: 10px;
- justify-self: center;
- align-self: center;
+	grid-area: title;
+	font-size: 10px;
+	justify-self: center;
+	align-self: center;
 }
 
 .contro_size > .icon:nth-child(1) {
- top: 0px;
- left: 10%;
+	top: 0px;
+	left: 10%;
 }
 
 .contro_size > .icon:nth-child(2) {
- top: 0px;
- left: 0%;
+	top: 0px;
+	left: 0%;
 }
 
 .contro_size > .icon:nth-child(3) {
- top: 0px;
- left: -5px;
+	top: 0px;
+	left: -5px;
 }
 
 .containerFile {
- width: 100%;
- height: 100%;
- padding: 3px;
- box-sizing: border-box;
- border-radius: 0 0 3px 3px;
- 
- display: flex;
- flex-wrap: wrap;
- justify-content: flex-start;
- align-items: flex-start;
- align-content: flex-start;
- gap: 5px;
- 
- overflow-y: scroll;
+	width: 100%;
+	height: 100%;
+	padding: 3px;
+	box-sizing: border-box;
+	border-radius: 0 0 3px 3px;
+
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: flex-start;
+	align-content: flex-start;
+	gap: 5px;
+
+	overflow-y: scroll;
 }
 
 .menu {
-  background-color: #294986;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  list-style: none;
- }
- 
+	background-color: #294986;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	list-style: none;
+}
+
 .menu li {
- font-size: 8px;
- width: 40px;
- text-align: center;
+	font-size: 8px;
+	width: 40px;
+	text-align: center;
 }
 
 .menu li:active {
- background-color: #9fa3acf1;
+	background-color: #9fa3acf1;
 }
 .menu li:hover {
- background-color: #9fa3acf1;
+	background-color: #9fa3acf1;
 }

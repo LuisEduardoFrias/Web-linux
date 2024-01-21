@@ -4,6 +4,9 @@
 
 import { Guid } from "guid-typescript";
 import Window from "md/window";
+import Dk from "md/desk";
+import Point from "md/point";
+import Size from "md/size";
 
 export type Action = {
 	type: action;
@@ -20,84 +23,105 @@ export enum actions {
 	showLockCheckPanel = "showLockCheckPanel",
 	lock = "lock",
 	showInfoPanel = "showInfoPanel",
-	openApp = "openApp"
+	openApp = "openApp",
+	changeWindowState = "changeWindowState",
+	closeApp = "closeApp"
 	/*
-	closeApp = "closeApp",
-	normalApp = "normalApp",
 	openFolder = "openFolder"*/
 }
 
 export default function Reducer(state, action) {
-	const _state = { ...state };
 	const _actions = {
 		unblock: () => {
-			_state.menu.apps = action.apps;
-			return { ..._state, unblock: action.unblock };
+			state.menu.apps = action.apps;
+			return { ...state, unblock: action.unblock };
 		},
 		lock() {
-			_state.taskbar.panel_checklock = false;
-			return { ..._state, unblock: false };
+			state.taskbar.panel_checklock = false;
+			return { ...state, unblock: false };
 		},
 		loginKey: () => {
-			_state.menu.apps = action.apps;
-			return { ..._state, unblock: action.unblock, loading: action.loading };
+			state.menu.apps = action.apps;
+			return { ...state, unblock: action.unblock, loading: action.loading };
 		},
 		showPanelMenu: () => {
-			desTaskBarProp(_state, ["panel_menu"], action.value);
-			return { ..._state };
+			desTaskBarProp(state, ["panel_menu"], action.value);
+			return { ...state };
 		},
 		showVolumePanel: () => {
-			desTaskBarProp(_state, ["panel_volume"], action.value);
-			return { ..._state };
+			desTaskBarProp(state, ["panel_volume"], action.value);
+			return { ...state };
 		},
 		changeDesktop: () => {
-			_state.taskbar.desktop = action.value;
-			if (_state.taskbar.panel_volume)
-				_state.taskbar.panel_volume = !action.value;
-			return { ..._state };
+			state.taskbar.desktop = action.value;
+			if (state.taskbar.panel_volume)
+				state.taskbar.panel_volume = !action.value;
+			return { ...state };
 		},
 		changeVolume: () => {
-			_state.taskbar.volume = action.value;
-			return { ..._state };
+			state.taskbar.volume = action.value;
+			return { ...state };
 		},
 		showLockCheckPanel: () => {
-			desTaskBarProp(_state, ["panel_checklock"], action.value);
-			return { ..._state };
+			desTaskBarProp(state, ["panel_checklock"], action.value);
+			return { ...state };
 		},
 		showInfoPanel: () => {
-			desTaskBarProp(_state, ["panel_info"], action.value);
-			return { ..._state };
+			desTaskBarProp(state, ["panel_info"], action.value);
+			return { ...state };
 		},
 		openApp: () => {
-			_state.desks[_state.taskbar.desktop].addWindow(action.app.name);
-			_state.taskbar.panel_menu = false;
+			const desktop: Dk = state.desks.filter(
+				(desk: Dk) => desk.key === state.taskbar.desktop.key
+			)[0];
 
-			return { ..._state };
+			desktop.openWindows.push(
+				new Window(
+					action.app.name,
+					action.app.file,
+					new Point(0, 0),
+					new Size(300, 200)
+				)
+			);
+
+			state.taskbar.panel_menu = false;
+
+			return { ...state };
+		},
+		changeWindowState: () => {
+			//const desk = state[state.bar.desktop];
+			//desk.updateWindow(action.window);
+			return { ...state };
+		},
+		closeApp: () => {
+			const desktop: Dk = state.desks.filter(
+				(desk: Dk) => desk.key === state.taskbar.desktop.key
+			)[0];
+
+			const index = desktop.openWindows.findIndex(
+				w => w.key === action.window.key
+			);
+
+			if (index !== -1) {
+				desktop.openWindows.splice(index, 1);
+			}
+
+			return { ...state };
 		},
 		/*	
 		openFolder: () => {
-			const desk = _state[_state.bar.desktop];
+			const desk = state[state.bar.desktop];
 
 			desk.addWindow(
 				new Wd(Guid.create().toString(), "Folder", null),
-				_state.initDt.size.w,
-				_state.initDt.size.y - _state.bar.h
+				state.initDt.size.w,
+				state.initDt.size.y - state.bar.h
 			);
 
-			if (_state.bar.showPanelVolum) _state.bar.showVolum(false);
-			if (_state.bar.showPanelMenu) _state.bar.showMenu(false);
+			if (state.bar.showPanelVolum) state.bar.showVolum(false);
+			if (state.bar.showPanelMenu) state.bar.showMenu(false);
 
-			return { ..._state };
-		},
-		closeApp: () => {
-			const desk = _state[_state.bar.desktop];
-			desk.removeWindow(action.window);
-			return { ..._state };
-		},
-		normalApp: () => {
-			const desk = _state[_state.bar.desktop];
-			desk.updateWindow(action.window);
-			return { ..._state };
+			return { ...state };
 		},
 		*/
 		default: () => {

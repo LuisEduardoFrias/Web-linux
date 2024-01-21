@@ -21,9 +21,9 @@ export default class Desk {
 		this.openWindows = [];
 	}
 
-	async addWindow(app: AppMetaData) {
+	addWindow(app: AppMetaData) {
 		this.openWindows.push(
-			new Window(app.name, app.file, new Point(0, 0), new Size(300, 100))
+			new Window(app.name, app.file, new Point(0, 0), new Size(300, 200))
 		);
 	}
 }

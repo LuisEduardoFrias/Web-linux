@@ -1,0 +1,19 @@
+/** @format */
+
+.container {
+	background-color: #3f78a7;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	& .aside {
+		background-color: #373dd1;
+		width: 60px;
+		height: 100%;
+	}
+	& .maim {
+		width: 100%;
+		height: 100%;
+	}
+}

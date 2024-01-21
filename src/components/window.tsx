@@ -1,137 +1,131 @@
 /** @format */
 
 "use client";
-import React from "react";
+
+import React, { useState, useCallback, useRef } from "react";
 import Draggable from "react-draggable";
 import dynamic from "next/dynamic";
 import LdDualRing from "./ld_dual_ring";
 import Icon from "./icon";
 import Wd, { WindowState } from "md/window";
-import File from "md/file";
-import Folder from "md/folder";
-import FileFolder from "./file_folder";
 import useSize from "hk/use_size";
-
-import styles from "st/window.module.css";
-
 import useSuperState from "hk/use_super_state";
 import Reducer, { actions } from "hp/reducer";
 import initialState from "hp/initial_state";
+import styles from "st/window.module.css";
 
 interface IWindowpProps {
 	wd: Wd;
-	deskW: number;
-	deskH: number;
 }
 
-export default function Window({ wd: wd, deskH, deskW }: IWindowpProps) {
+export default function Window(props: IWindowpProps) {
 	const [state, dispatch] = useSuperState(Reducer, initialState(), []);
+	const windowRef = useRef(null);
+	const [_wd, setWd] = useState(props.wd);
 
 	const size = useSize();
 
-	wd.size.width = wd.state === WindowState.normal ? wd.size.width : deskW;
-	wd.size.height = wd.state === WindowState.normal ? wd.size.height : deskH;
-	wd.point.x = wd.state === WindowState.normal ? wd.point.x : 0;
-	wd.point.y = wd.state === WindowState.normal ? wd.point.y : 0;
+	_wd.size.w =
+		_wd.state == WindowState.normal
+			? size.width / 2
+			: _wd.state == WindowState.maximum
+			? size.width
+			: 0;
 
-	/*	let DynamicComponet: any;
-  	if (!wd.isFolder) {
-  		DynamicComponet = dynamic(() => import(`../${wd.url}`), {
-  			ssr: false,
-  			loading: () => (
-  				<LdDualRing
-  					width={wd.size.w}
-  					height={wd.size.h - 30}
-  					x={wd.point.x + 1}
-  					y={wd.point.y + 30}
-  					show={true}
-  				/>
-  			)
-  		});
-  	}
-*/
-	function handleNormal() {
-		if (wd.state == WindowState.maximum) {
-			dispatch({
-				type: actions.normalApp,
+	_wd.size.h =
+		_wd.state == WindowState.normal
+			? size.height / 2
+			: _wd.state == WindowState.maximum
+			? size.height
+			: 0;
+
+	_wd.point.x =
+		_wd.state == WindowState.normal ? size.width / 2 - _wd.size.w / 2 : 0;
+
+	_wd.point.y =
+		_wd.state == WindowState.normal ? size.height / 2 - _wd.size.h / 2 : 0;
+
+	let DynamicComponet: any;
+	if (_wd.url !== "") {
+		DynamicComponet = useCallback(() => {
+			return dynamic(() => import(`../../root/bin/${_wd.url}`), {
+				ssr: false,
+				loading: () => (
+					<LdDualRing
+						width={10}
+						height={10}
+						x={_wd.point.x}
+						y={_wd.point.y}
+						show={true}
+					/>
+				)
+			});
+		});
+	}
+
+	function handleChangeState() {
+		if (_wd.state == WindowState.maximum) {
+			/*dispatch({ type: actions.normalApp,
 				window: {
-					...wd,
+					..._wd,
 					size: { w: 200, h: 100 },
 					point: { x: 50, y: 59 },
 					state: 1
 				}
-			});
-		} else if (wd.state == WindowState.normal) {
-			dispatch({
-				type: actions.normalApp,
+			});*/
+			//setWd({ ..._wd, state: WindowState.normal });
+
+			changeWindowState(_wd, size, windowRef, WindowState.normal);
+		} else if (_wd.state == WindowState.normal) {
+			changeWindowState(_wd, size, windowRef, WindowState.maximum);
+			/* dispatch({ type: actions.changeWindowState,
 				window: {
-					...wd,
+					..._wd,
 					size: { w: deskW, h: deskH },
 					point: { x: 0, y: 0 },
 					state: 2
 				}
-			});
+			}); */
+			//setWd({ ..._wd, state: WindowState.maximum });
 		}
 	}
 
 	const _style = {
-		width: `${wd.size.w}px`,
-		height: `${wd.size.h}px`,
-		left: `${wd.point.x}px`,
-		top: `${wd.point.y}px`
+		width: `${_wd.size.w}px`,
+		height: `${_wd.size.h - 30}px`,
+		left: `${_wd.point.x}px`,
+		top: `${_wd.point.y}px`
 	};
-
-	const fileFolders: (File | Foler)[] = [];
-
-	if (wd.files) fileFolders.push(...wd.files);
-
-	if (wd.folders) fileFolders.push(...wd.folders);
-
-	// "./Rodeados.mp3"
-	/*	const filedata = dynamic(
-  		() => import(`../root/home/luiseduardofrias/pn.tsx`),
-  		{
-  			ssr: false,
-  			loading: () => (
-  				<LdDualRing
-  					width={wd.size.w}
-  					height={wd.size.h - 30}
-  					x={wd.point.x + 1}
-  					y={wd.point.y + 30}
-  					show={true}
-  				/>
-  			)
-  		}
-  	);
-*/
 
 	return (
 		<Draggable
+			//nodeRef={nodeRef}
 			axis='both'
 			handle='.handle'
-			bounds={{ left: -1000, top: 0, right: 1000, bottom: 1000 }}
-			disabled={false}
-			//	grid={[25, 25]}
-			//	defaultPosition={{ x: 0, y: 0 }}
-			//	position={null}
-			//scale={1}
-			//								onStart={this.handleStart}
-			//								onDrag={this.handleDrag}
-			//								onStop={this.handleStop}
-		>
-			<div className={styles.window} style={_style}>
-				<div className={`handle ${styles.bar}`}>
-					<span>{wd.title}</span>
+			bounds='parent' //{{ left: -1000, top: 0, right: 1000, bottom: 1000 }}
+			//	defaultClassName={styles.}
+			disabled={_wd.state == WindowState.maximum ? true : false}
+			scale={1}>
+			<div className={styles.window} ref={windowRef} style={_style}>
+				<div className={styles.bar}>
+					<div className={`handle ${styles.handle_}`}>
+						<span>{_wd.title}</span>
+					</div>
 					<div className={styles.contro_size}>
+						{/*minimized*/}
 						<Icon className={styles.icon}>close_fullscreen</Icon>
-						<Icon className={styles.icon} onclick={handleNormal}>
-							{wd.state == WindowState.maximum
+
+						{/*maximum and normal*/}
+						<Icon className={styles.icon} onclick={handleChangeState}>
+							{_wd.state == WindowState.maximum
 								? "fullscreen_exit"
 								: "fullscreen"}
 						</Icon>
+
+						{/*close*/}
 						<Icon
 							className={styles.icon}
-							onclick={() => dispatch({ type: actions.closeApp, window: wd })}>
+							onclick={() => dispatch({ type: actions.closeApp, window: _wd })}>
 							close
 						</Icon>
 					</div>
@@ -143,28 +137,90 @@ export default function Window({ wd: wd, deskH, deskW }: IWindowpProps) {
 					<li>ayuda</li>
 				</ul>
 				<div className={styles.container}>
-					{/*
-						!wd.isFolder ? (
+					{
 						<DynamicComponet
 							//data={{ path_video_audio: filedata }}
-							width={wd.size.w}
-							height={wd.size.h - 28}
+							width={_wd.size.w}
+							height={_wd.size.h - 50}
 						/>
-					) : (
-						<div className={styles.containerFile}>
-							{fileFolders?.map((obj: File | Folder, inde: number) => (
-								<FileFolder key={inde} obj={obj} url={wd.url} />
-							))}
-						</div>
-					) */}
+					}
 				</div>
 			</div>
 		</Draggable>
 	);
 }
 
-/*
+function changeWindowState(_wd: Wd, size, ref: any, state: WindowState) {
+	//
+	ref.style.width =
+		_wd.state == state
+			? `${size.width / 2}px`
+			: _wd.state == state
+			? `${size.width}px`
+			: "0px";
 
+	ref.style.height =
+		_wd.state == state
+			? `${size.height / 2}px`
+			: _wd.state == state
+			? `${size.height}px`
+			: "0px";
+
+	ref.style.left =
+		_wd.state == state ? `${size.width / 2 - _wd.size.w / 2}px` : "0px";
+
+	ref.style.top =
+		_wd.state == state ? `${size.height / 2 - _wd.size.h / 2}` : "0px";
+}
+
+/*
+// Tipos:
+type DraggableEventHandler = (e: Event, data: DraggableData) => void | false;
+type DraggableData = {
+  node: HTMLElement, // lastX + deltaX === x
+  x: number,
+  y: number,
+  deltaX: number,
+  deltaY: number,
+  lastX: number,
+  lastY: number
+};
+
+// Propiedades:
+  // Si se establece en `true`, permitirá arrastrar con clics que no sean el botón izquierdo.
+  allowAnyClick: boolean,
+  // Determina en qué eje puede moverse el elemento arrastrable. Esto solo afecta
+  // al volcado en el DOM. Las devoluciones de llamada seguirán incluyendo todos los valores.
+  // Valores aceptados:
+  // - `both` permite el movimiento horizontal y vertical (predeterminado).
+  // - `x` limita el movimiento al eje horizontal.
+  // - `y` limita el movimiento al eje vertical.
+  // - 'none' detiene todo movimiento.
+  axis: string,
+  // Especifica los límites de movimiento. Valores aceptados:
+  // - `parent` restringe el movimiento dentro del offsetParent del nodo
+  // (el nodo más cercano con posición relativa o absoluta), o
+  // - un selector, restringe el movimiento dentro del nodo objetivo
+  // - Un objeto con propiedades `left, top, right y bottom`.
+  // Estos indican hasta dónde en cada dirección el elemento arrastrable
+  // se puede mover.
+  bounds: {left?: number, top?: number, right?: number, bottom?: number} | string,
+  // Especifica un selector a utilizar para evitar la inicialización del arrastre. La cadena se pasa a
+  // Element.matches, por lo que es posible usar múltiples selectores como `.primero, .segundo`.
+  // Ejemplo: '.cuerpo'
+  cancel: string,
+  // Nombres de clases para la interfaz de arrastre.
+  // Por defecto son 'react-draggable', 'react-draggable-dragging' y 'react-draggable-dragged'.
+  defaultClassName: string,
+  defaultClassNameDragging: string,
+  defaultClassNameDragged: string,
+  // Especifica el `x` e `y` en el que debería comenzar el elemento arrastrado.
+  // Generalmente no es necesario usar esto (puede usar posicionamiento absoluto o relativo del
+  // hijo directamente), pero puede ser útil para la uniformidad en
+  // sus devoluciones de llamada y con transformaciones de css.
+  defaultPosition: {x: number, y: number},
+  // Si es verdadero, no llamará a ningún controlador de arrastre.
+  disabled: boolean,
 
 // Especifica el x e y al que se debe acoplar el arrastre.
 grid: [número, número], 
