@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState } from "react";
 import Draggable from "react-draggable";
 import dynamic from "next/dynamic";
 import LdDualRing from "./ld_dual_ring";
@@ -20,7 +20,7 @@ interface IWindowpProps {
 
 export default function Window(props: IWindowpProps) {
 	const [state, dispatch] = useSuperState(Reducer, initialState(), []);
-	const windowRef = useRef(null);
+
 	const [_wd, setWd] = useState(props.wd);
 
 	const size = useSize();
@@ -47,19 +47,17 @@ export default function Window(props: IWindowpProps) {
 
 	let DynamicComponet: any;
 	if (_wd.url !== "") {
-		DynamicComponet = useCallback(() => {
-			return dynamic(() => import(`../../root/bin/${_wd.url}`), {
-				ssr: false,
-				loading: () => (
-					<LdDualRing
-						width={10}
-						height={10}
-						x={_wd.point.x}
-						y={_wd.point.y}
-						show={true}
-					/>
-				)
-			});
+		DynamicComponet = dynamic(() => import(`../../root/bin/${_wd.url}`), {
+			ssr: false,
+			loading: () => (
+				<LdDualRing
+					width={_wd.size.w}
+					height={_wd.size.h}
+					x={_wd.point.x}
+					y={_wd.point.y + 50}
+					show={true}
+				/>
+			)
 		});
 	}
 
@@ -73,11 +71,8 @@ export default function Window(props: IWindowpProps) {
 					state: 1
 				}
 			});*/
-			//setWd({ ..._wd, state: WindowState.normal });
-
-			changeWindowState(_wd, size, windowRef, WindowState.normal);
+			setWd({ ..._wd, state: WindowState.normal });
 		} else if (_wd.state == WindowState.normal) {
-			changeWindowState(_wd, size, windowRef, WindowState.maximum);
 			/* dispatch({ type: actions.changeWindowState,
 				window: {
 					..._wd,
@@ -86,7 +81,7 @@ export default function Window(props: IWindowpProps) {
 					state: 2
 				}
 			}); */
-			//setWd({ ..._wd, state: WindowState.maximum });
+			setWd({ ..._wd, state: WindowState.maximum });
 		}
 	}
 
@@ -106,7 +101,7 @@ export default function Window(props: IWindowpProps) {
 			//	defaultClassName={styles.}
 			disabled={_wd.state == WindowState.maximum ? true : false}
 			scale={1}>
-			<div className={styles.window} ref={windowRef} style={_style}>
+			<div className={styles.window} style={_style}>
 				<div className={styles.bar}>
 					<div className={`handle ${styles.handle_}`}>
 						<span>{_wd.title}</span>
@@ -141,36 +136,13 @@ export default function Window(props: IWindowpProps) {
 						<DynamicComponet
 							//data={{ path_video_audio: filedata }}
 							width={_wd.size.w}
-							height={_wd.size.h - 50}
+							height={_wd.size.h - 28}
 						/>
 					}
 				</div>
 			</div>
 		</Draggable>
 	);
-}
-
-function changeWindowState(_wd: Wd, size, ref: any, state: WindowState) {
-	//
-	ref.style.width =
-		_wd.state == state
-			? `${size.width / 2}px`
-			: _wd.state == state
-			? `${size.width}px`
-			: "0px";
-
-	ref.style.height =
-		_wd.state == state
-			? `${size.height / 2}px`
-			: _wd.state == state
-			? `${size.height}px`
-			: "0px";
-
-	ref.style.left =
-		_wd.state == state ? `${size.width / 2 - _wd.size.w / 2}px` : "0px";
-
-	ref.style.top =
-		_wd.state == state ? `${size.height / 2 - _wd.size.h / 2}` : "0px";
 }
 
 /*
