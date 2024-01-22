@@ -22,6 +22,36 @@ export default function Window(props: IWindowpProps) {
 	const [state, dispatch] = useSuperState(Reducer, initialState(), []);
 
 	const [_wd, setWd] = useState(props.wd);
+	const [windowState, setWindowsState] = useState({data: [
+	{
+		name: "luis"
+	},
+	{
+		name: "junior"
+	},
+	{
+		name: "carlos"
+	}
+], group: [
+	{
+		name: "group1",
+		checkedRead: true,
+		checkedWrite: false,
+		checkedExecution: true
+	},
+	{
+		name: "group2",
+		checkedRead: true,
+		checkedWrite: true,
+		checkedExecution: false
+	},
+	{
+		name: "group3",
+		checkedRead: false,
+		checkedWrite: false,
+		checkedExecution: true
+	}
+]});
 
 	const size = useSize();
 
@@ -137,6 +167,8 @@ export default function Window(props: IWindowpProps) {
 							//data={{ path_video_audio: filedata }}
 							width={_wd.size.w}
 							height={_wd.size.h - 28}
+							windowState={windowState}
+							setWindowsState={setWindowsState}
 						/>
 					}
 				</div>

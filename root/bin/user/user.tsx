@@ -1,68 +1,129 @@
 /** @format */
+import { useState } from "react";
 import styles from "./files/user.module.css";
 import Icon from "cp/icon";
 
-export default function User() {
+interface IProps {
+	windowState: any;
+	setWindowsState: any;
+}
+
+export default function User({ windowState, setWindowsState }: IProps) {
+	const [selectedRow, setSelectedRow] = useState(null);
+	const { data, group } = windowState;
+
+	function handleRowClick(rowData) {
+		setSelectedRow(rowData);
+		// Aquí puedes disparar el evento con los datos de la fila (rowData)
+	}
+
+	function handleCheckClick(check: string, name: string, isCheck: boolean) {
+		setWindowsState(prev => {
+			const select = prev.group.filter((e: any) => e.name === name)[0];
+			select[check] = !isCheck;
+
+			return { ...prev };
+		});
+	}
+
 	return (
 		<div className={styles.container}>
 			<fieldset className={styles.aside}>
 				<legend>Access Control List</legend>
 				<div>
-					<table class='tg'>
+					<table className={styles.tg}>
 						<thead>
 							<tr>
-								<th class='tg-vqx1'></th>
-								<th class='tg-vqx1'>Entry</th>
-								<th class='tg-vqx1'>Read</th>
-								<th class='tg-vqx1'>Write</th>
-								<th class='tg-vqx1'>Execution</th>
+								<th className={styles.tgVqx1}></th>
+								<th className={styles.tgVqx1}>Entry</th>
+								<th className={styles.tgVqx1}>Read</th>
+								<th className={styles.tgVqx1}>Write</th>
+								<th className={styles.tgVqx1}>Execution</th>
+								<th className={styles.tgVqx2}></th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td class='tg-8jgo'>
-									<Icon>person</Icon>
-								</td>
-								<td class='tg-8jgo'>name</td>
-								<td class='tg-8jgo'>
-									<input
-										type='checkbox'
-										tabindex='20'
-										name='edad'
-										value='20-39'
-									/>
-								</td>
-								<td class='tg-8jgo'>
-									<input
-										type='checkbox'
-										tabindex='20'
-										name='edad'
-										value='20-39'
-									/>
-								</td>
-								<td class='tg-8jgo'>
-									<input
-										type='checkbox'
-										tabindex='20'
-										name='edad'
-										value='20-39'
-									/>
-								</td>
-							</tr>
+							{group.map((row, index) => (
+								<tr
+									key={index}
+									className={selectedRow === row ? styles.selectedRow : ""}
+									onClick={() => handleRowClick(row)}>
+									<td className={styles.tg8jgo}>
+										<Icon>person</Icon>
+									</td>
+									<td className={styles.tg8jgo}>{row.name}</td>
+									<td className={styles.tg8jgo}>
+										<input
+											type='checkbox'
+											tabindex='20'
+											name='edad'
+											checked={row.checkedRead}
+											value='20-39'
+											onClick={() =>
+												handleCheckClick(
+													"checkedRead",
+													row.name,
+													row.checkedRead
+												)
+											}
+										/>
+									</td>
+									<td className={styles.tg8jgo}>
+										<input
+											type='checkbox'
+											tabindex='20'
+											checked={row.checkedWrite}
+											name='edad'
+											value='20-39'
+											onClick={() =>
+												handleCheckClick(
+													"checkedWrite",
+													row.name,
+													row.checkedWrite
+												)
+											}
+											bdhd
+										/>
+									</td>
+									<td className={styles.tg8jgo}>
+										<input
+											type='checkbox'
+											tabindex='20'
+											checked={row.checkedExecution}
+											name='edad'
+											value='20-39'
+											onClick={() =>
+												handleCheckClick(
+													"checkedExecution",
+													row.name,
+													row.checkedExecution
+												)
+											}
+										/>
+									</td>
+								</tr>
+							))}
 						</tbody>
 					</table>
 				</div>
 			</fieldset>
 			<fieldset className={styles.main}>
 				<legend>Participants List</legend>
-				<div>
-					<div>
+
+				<div className={styles.controlers}>
+					<div className={styles.selectType}>
 						<label htmlFor='user'>User</label>
-						<input type='radio' id='user' value='user' />
+						<input
+							type='radio'
+							checked
+							name='seletType'
+							id='user'
+							value='user'
+						/>
 						<label htmlFor='group'>Group</label>
-						<input type='radio' id='group' value='group' />
+						<input type='radio' name='seletType' id='group' value='group' />
 					</div>
-					<div>
+					<div className={styles.filterButton}>
 						<div>
 							<input placeholder='Filter' />
 							<Icon>search</Icon>
@@ -78,20 +139,26 @@ export default function User() {
 					</div>
 				</div>
 				<div>
-					<table class='tg'>
+					<table className={styles.tg}>
 						<thead>
 							<tr>
-								<th class='tg-vqx1'></th>
-								<th class='tg-vqx1'>Participant</th>
+								<th className={styles.tgVqx1}></th>
+								<th className={styles.tgVqx1}>Participant</th>
+								<th className={styles.tgVqx2}></th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td class='tg-8jgo'>
-									<Icon>person</Icon>
-								</td>
-								<td class='tg-8jgo'>name</td>
-							</tr>
+							{data.map((row, index) => (
+								<tr
+									key={index}
+									className={selectedRow === row ? styles.selectedRow : ""}
+									onClick={() => handleRowClick(row)}>
+									<td className={styles.tg8jgo}>
+										<Icon>person</Icon>
+									</td>
+									<td className={styles.tg8jgo}>{row.name}</td>
+								</tr>
+							))}
 						</tbody>
 					</table>
 				</div>
