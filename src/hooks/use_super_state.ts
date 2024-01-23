@@ -50,7 +50,7 @@ function middledistpach(action: Action, reducer: Reducer): void {
 	changedProperties.forEach((p: string) => {
 		for (let key in subscriber) {
 			subscriber[key].props.forEach((pr: string) => {
-				if (p === pr && subscriber[key].wasCalled === false) {
+				if ((p === pr || pr === "all") && subscriber[key].wasCalled === false) {
 					subscriber[key].disp({ type: UPDATE_OBTION_ID });
 					subscriber[key].wasCalled = true;
 				}
@@ -119,9 +119,9 @@ export default function useSuperState(
 
 	const [state, dispatch] = useReducer(middlereducer, initalState);
 
-//	console.log("state updated");
-  	//Octiene el nombre del componente
-  	const callerFunction = new Error().stack?.split("\n")[2].trim().split(" ")[1];
+	//	console.log("state updated");
+	//Octiene el nombre del componente
+	const callerFunction = new Error().stack?.split("\n")[2].trim().split(" ")[1];
 
 	//suscribe el componentes
 	subscribe(props, callerFunction, dispatch);
@@ -157,6 +157,8 @@ function returnStateForSubscribe(state: object, callerFunction: string) {
 	const newState = {};
 	if (subscriber[callerFunction])
 		subscriber[callerFunction].props.forEach((pr: string) => {
+			if (pr === "all") return state;
+			
 			Reflect.set(newState, pr, state[pr]);
 		});
 

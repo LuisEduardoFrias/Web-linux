@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Draggable from "react-draggable";
 import dynamic from "next/dynamic";
 import LdDualRing from "./ld_dual_ring";
@@ -20,38 +20,7 @@ interface IWindowpProps {
 
 export default function Window(props: IWindowpProps) {
 	const [state, dispatch] = useSuperState(Reducer, initialState(), []);
-
 	const [_wd, setWd] = useState(props.wd);
-	const [windowState, setWindowsState] = useState({data: [
-	{
-		name: "luis"
-	},
-	{
-		name: "junior"
-	},
-	{
-		name: "carlos"
-	}
-], group: [
-	{
-		name: "group1",
-		checkedRead: true,
-		checkedWrite: false,
-		checkedExecution: true
-	},
-	{
-		name: "group2",
-		checkedRead: true,
-		checkedWrite: true,
-		checkedExecution: false
-	},
-	{
-		name: "group3",
-		checkedRead: false,
-		checkedWrite: false,
-		checkedExecution: true
-	}
-]});
 
 	const size = useSize();
 
@@ -69,48 +38,33 @@ export default function Window(props: IWindowpProps) {
 			? size.height
 			: 0;
 
-	_wd.point.x =
-		_wd.state == WindowState.normal ? size.width / 2 - _wd.size.w / 2 : 0;
+	_wd.point.x = 0; /*
+		_wd.state == WindowState.normal ? size.width / 2 - _wd.size.w / 2 : 0; */
 
-	_wd.point.y =
-		_wd.state == WindowState.normal ? size.height / 2 - _wd.size.h / 2 : 0;
+	_wd.point.y = 0;
+	/*	_wd.state == WindowState.normal ? size.height / 2 - _wd.size.h / 2 : 0; */
 
-	let DynamicComponet: any;
-	if (_wd.url !== "") {
-		DynamicComponet = dynamic(() => import(`../../root/bin/${_wd.url}`), {
-			ssr: false,
-			loading: () => (
-				<LdDualRing
-					width={_wd.size.w}
-					height={_wd.size.h}
-					x={_wd.point.x}
-					y={_wd.point.y + 50}
-					show={true}
-				/>
-			)
-		});
-	}
+	const DynamicComponet = useMemo(
+		() =>
+			dynamic(() => import(`../../root/bin/${_wd.url}`), {
+				ssr: false,
+				loading: () => (
+					<LdDualRing
+						width={_wd.size.w}
+						height={_wd.size.h}
+						x={_wd.point.x}
+						y={_wd.point.y + 50}
+						show={true}
+					/>
+				)
+			}),
+		[_wd.url]
+	);
 
 	function handleChangeState() {
 		if (_wd.state == WindowState.maximum) {
-			/*dispatch({ type: actions.normalApp,
-				window: {
-					..._wd,
-					size: { w: 200, h: 100 },
-					point: { x: 50, y: 59 },
-					state: 1
-				}
-			});*/
 			setWd({ ..._wd, state: WindowState.normal });
 		} else if (_wd.state == WindowState.normal) {
-			/* dispatch({ type: actions.changeWindowState,
-				window: {
-					..._wd,
-					size: { w: deskW, h: deskH },
-					point: { x: 0, y: 0 },
-					state: 2
-				}
-			}); */
 			setWd({ ..._wd, state: WindowState.maximum });
 		}
 	}
@@ -122,13 +76,17 @@ export default function Window(props: IWindowpProps) {
 		top: `${_wd.point.y}px`
 	};
 
+	function Dispatch(obj: object) {
+		if (obj.type !== "") {
+			dispatch(obj);
+		}
+	}
+
 	return (
 		<Draggable
-			//nodeRef={nodeRef}
 			axis='both'
 			handle='.handle'
-			bounds='parent' //{{ left: -1000, top: 0, right: 1000, bottom: 1000 }}
-			//	defaultClassName={styles.}
+			bounds={{ left: -1000, top: 0, right: 1000, bottom: 1000 }}
 			disabled={_wd.state == WindowState.maximum ? true : false}
 			scale={1}>
 			<div className={styles.window} style={_style}>
@@ -139,14 +97,12 @@ export default function Window(props: IWindowpProps) {
 					<div className={styles.contro_size}>
 						{/*minimized*/}
 						<Icon className={styles.icon}>close_fullscreen</Icon>
-
 						{/*maximum and normal*/}
 						<Icon className={styles.icon} onclick={handleChangeState}>
 							{_wd.state == WindowState.maximum
 								? "fullscreen_exit"
 								: "fullscreen"}
 						</Icon>
-
 						{/*close*/}
 						<Icon
 							className={styles.icon}
@@ -164,11 +120,10 @@ export default function Window(props: IWindowpProps) {
 				<div className={styles.container}>
 					{
 						<DynamicComponet
-							//data={{ path_video_audio: filedata }}
 							width={_wd.size.w}
 							height={_wd.size.h - 28}
-							windowState={windowState}
-							setWindowsState={setWindowsState}
+							State={state["profiles"]}
+							dispatch={Dispatch}
 						/>
 					}
 				</div>
@@ -176,6 +131,60 @@ export default function Window(props: IWindowpProps) {
 		</Draggable>
 	);
 }
+
+const data = [
+	{
+		name: "luis",
+		groups: [
+			{
+				name: "group1",
+				checkedRead: true,
+				checkedWrite: false,
+				checkedExecution: true
+			},
+			{
+				name: "group2",
+				checkedRead: true,
+				checkedWrite: true,
+				checkedExecution: false
+			},
+			{
+				name: "group3",
+				checkedRead: false,
+				checkedWrite: false,
+				checkedExecution: true
+			}
+		]
+	},
+	{
+		name: "junior",
+		groups: [
+			{
+				name: "group1",
+				checkedRead: true,
+				checkedWrite: true,
+				checkedExecution: true
+			}
+		]
+	},
+	{
+		name: "carlos",
+		groups: [
+			{
+				name: "group1",
+				checkedRead: false,
+				checkedWrite: false,
+				checkedExecution: false
+			},
+			{
+				name: "group3",
+				checkedRead: true,
+				checkedWrite: false,
+				checkedExecution: true
+			}
+		]
+	}
+];
 
 /*
 // Tipos:

@@ -1,26 +1,43 @@
 /** @format */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./files/user.module.css";
 import Icon from "cp/icon";
+import CreateUser from "./files/create_user";
+import { Get } from "hp/fetch";
 
-interface IProps {
-	windowState: any;
-	setWindowsState: any;
-}
+interface IProps {}
 
-export default function User({ windowState, setWindowsState }: IProps) {
+export default function User({ State, setWindowsState }: IProps) {
+	const [data, setData] = useState(null);
 	const [selectedRow, setSelectedRow] = useState(null);
-	const { data, group } = windowState;
+	const [showCreate, setShowCreate] = useState(false);
+	const [selectedGroups, setSelectedGroups] = useState({
+		user: data[0].name,
+		groups: data[0].groups
+	});
+
+	useEffect(() => {
+		(async () => {
+			setData(await Get("get_users"));
+		})();
+	}, []);
 
 	function handleRowClick(rowData) {
 		setSelectedRow(rowData);
-		// Aquí puedes disparar el evento con los datos de la fila (rowData)
+		setSelectedGroups({ user: rowData.name, groups: rowData.groups });
 	}
 
-	function handleCheckClick(check: string, name: string, isCheck: boolean) {
+	function handleCheckClick(
+		user: string,
+		group: string,
+		checkbox: string,
+		isCheck: boolean
+	) {
 		setWindowsState(prev => {
-			const select = prev.group.filter((e: any) => e.name === name)[0];
-			select[check] = !isCheck;
+			const _user = prev.data.filter((e: any) => e.name === user)[0];
+			const _group = _user.groups.filter((e: any) => e.name === group)[0];
+
+			_group[checkbox] = !isCheck;
 
 			return { ...prev };
 		});
@@ -28,7 +45,10 @@ export default function User({ windowState, setWindowsState }: IProps) {
 
 	return (
 		<div className={styles.container}>
-			<fieldset className={styles.aside}>
+			{showCreate && (
+				<CreateUser setShowCreate={setShowCreate} dispatch={dispatch} />
+			)}
+			<fieldset className={styles.section}>
 				<legend>Access Control List</legend>
 				<div>
 					<table className={styles.tg}>
@@ -43,7 +63,7 @@ export default function User({ windowState, setWindowsState }: IProps) {
 							</tr>
 						</thead>
 						<tbody>
-							{group.map((row, index) => (
+							{selectedGroups.groups.map((row, index) => (
 								<tr
 									key={index}
 									className={selectedRow === row ? styles.selectedRow : ""}
@@ -61,8 +81,9 @@ export default function User({ windowState, setWindowsState }: IProps) {
 											value='20-39'
 											onClick={() =>
 												handleCheckClick(
-													"checkedRead",
+													selectedGroups.user,
 													row.name,
+													"checkedRead",
 													row.checkedRead
 												)
 											}
@@ -77,8 +98,9 @@ export default function User({ windowState, setWindowsState }: IProps) {
 											value='20-39'
 											onClick={() =>
 												handleCheckClick(
-													"checkedWrite",
+													selectedGroups.user,
 													row.name,
+													"checkedWrite",
 													row.checkedWrite
 												)
 											}
@@ -94,8 +116,9 @@ export default function User({ windowState, setWindowsState }: IProps) {
 											value='20-39'
 											onClick={() =>
 												handleCheckClick(
-													"checkedExecution",
+													selectedGroups.user,
 													row.name,
+													"checkedExecution",
 													row.checkedExecution
 												)
 											}
@@ -107,28 +130,19 @@ export default function User({ windowState, setWindowsState }: IProps) {
 					</table>
 				</div>
 			</fieldset>
-			<fieldset className={styles.main}>
+			<fieldset className={styles.section}>
 				<legend>Participants List</legend>
 
 				<div className={styles.controlers}>
-					<div className={styles.selectType}>
-						<label htmlFor='user'>User</label>
-						<input
-							type='radio'
-							checked
-							name='seletType'
-							id='user'
-							value='user'
-						/>
-						<label htmlFor='group'>Group</label>
-						<input type='radio' name='seletType' id='group' value='group' />
-					</div>
 					<div className={styles.filterButton}>
-						<div>
+						<div className={styles.filter}>
 							<input placeholder='Filter' />
 							<Icon>search</Icon>
 						</div>
-						<button>
+						<button
+							onClick={() => {
+								setShowCreate(true);
+							}}>
 							Add
 							<Icon>person_add</Icon>
 						</button>

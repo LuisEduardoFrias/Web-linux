@@ -1,0 +1,10 @@
+{
+	"root": 
+		{
+			"user": "root",
+			"password": "",
+			"id": 0,
+			"listGrouo": "ventas,supervisores,produccion"
+		}
+	
+}

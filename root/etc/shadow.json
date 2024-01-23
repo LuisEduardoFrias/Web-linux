@@ -1,0 +1,11 @@
+{
+	"root": 
+		{
+			"user": "root",
+			"password": "",
+			"lastChange": 0,
+			"days":15,
+			"daysChangePasswd":30
+		}
+	
+}

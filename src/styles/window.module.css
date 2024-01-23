@@ -66,6 +66,8 @@
 		background-color: #ffffff;
 		filter: blur(0.5);
 		box-sizing: border-box;
+		overflow-x: hidden;
+		overflow-y: auto;
 	}
 }
 
