@@ -10,6 +10,12 @@
 	align-items: center;
 }
 
+.password2 {
+	opacity: 0;
+	position: absolute;
+	top: -10000px;
+}
+
 .form_ {
 	width: 200px;
 	height: 250px;

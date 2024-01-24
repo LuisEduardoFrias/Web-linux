@@ -4,7 +4,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import styles from "./files/terminal.module.css";
-import { setData } from "hp/fetch";
+import { Post } from "hp/fetch";
 
 interface ITerminalProps {
 	width: number;
@@ -60,7 +60,7 @@ export default function Terminal(props: ITerminalProps): JSX.Element {
 				return;
 			}
 
-			const { answer, cmd } = await setData(endpoint, {
+			const { answer, cmd } = await Post(endpoint, {
 				command: command
 			});
 

@@ -1,11 +1,1 @@
-{
-	"root": 
-		{
-			"user": "root",
-			"password": "",
-			"lastChange": 0,
-			"days":15,
-			"daysChangePasswd":30
-		}
-	
-}
+{"root":{"user":"root","password":"","lastChange":0,"days":15,"daysChangePasswd":30},"RuthBO":{"user":"RuthBO","password":"123456","lastChange":0,"days":15,"daysChangePasswd":30}}

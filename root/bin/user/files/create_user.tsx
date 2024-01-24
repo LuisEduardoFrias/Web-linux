@@ -1,5 +1,5 @@
 /** @format */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Input from "cp/input";
 import Form from "cp/form";
 import Icon from "cp/icon";
@@ -17,20 +17,22 @@ export default function CreateUser(props: IProps) {
 	const [loader, setLoader] = useState(false);
 	const [data, setData] = useState(init);
 
+	useEffect(() => {}, [data]);
+
 	function handleSubmit(event: any) {
 		event.preventDefault();
 		setLoader(true);
 
-		setTimeout(() => {
-			(async () => {
-				await Post("create_user", {
-					...data
-				});
-			})();
+		if (data.name !== "" && data.userName !== "" && data.password !== "")
+			setTimeout(() => {
+				(async () => {
+					await Post("create_user", { ...data });
+				})();
 
-			setData(init);
-			setLoader(false);
-		}, 1000);
+				setData(init);
+				setLoader(false);
+				props.setShowCreate(false);
+			}, 1000);
 	}
 
 	function handleChange(event: any) {
@@ -67,6 +69,7 @@ export default function CreateUser(props: IProps) {
 								autoComplete='off'
 								name={"name"}
 								id={"name"}
+								value={data.name}
 								onChange={handleChange}
 							/>
 						</div>
@@ -82,6 +85,7 @@ export default function CreateUser(props: IProps) {
 								autoComplete='off'
 								name={"userName"}
 								id={"userName"}
+								value={data.userName}
 								onChange={handleChange}
 							/>
 						</div>
@@ -98,6 +102,7 @@ export default function CreateUser(props: IProps) {
 								type={"password"}
 								name={"password"}
 								id={"password"}
+								value={data.password}
 								onChange={handleChange}
 							/>
 						</div>

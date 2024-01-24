@@ -8,118 +8,115 @@ import { Get } from "hp/fetch";
 interface IProps {}
 
 export default function User({ State, setWindowsState }: IProps) {
-	const [data, setData] = useState(null);
-	const [selectedRow, setSelectedRow] = useState(null);
+	const [users, setUsers] = useState([]);
+	const [selectedUser, setSelectedUser] = useState(null);
 	const [showCreate, setShowCreate] = useState(false);
-	const [selectedGroups, setSelectedGroups] = useState({
-		user: data[0].name,
-		groups: data[0].groups
-	});
 
 	useEffect(() => {
 		(async () => {
-			setData(await Get("get_users"));
+			const { data } = await Get("get_users");
+			setUsers(data);
 		})();
 	}, []);
 
-	function handleRowClick(rowData) {
-		setSelectedRow(rowData);
-		setSelectedGroups({ user: rowData.name, groups: rowData.groups });
+	function handleRowClick(user) {
+		setSelectedUser(user);
 	}
 
 	function handleCheckClick(
-		user: string,
 		group: string,
 		checkbox: string,
 		isCheck: boolean
-	) {
-		setWindowsState(prev => {
-			const _user = prev.data.filter((e: any) => e.name === user)[0];
-			const _group = _user.groups.filter((e: any) => e.name === group)[0];
+	) {}
 
-			_group[checkbox] = !isCheck;
-
-			return { ...prev };
-		});
-	}
+	const groups = [
+		{
+			name: "Groups 1",
+			name: "Groups 1",
+			checkedRead: true,
+			checkedWrite: false,
+			checkedExecution: true
+		},
+		{
+			name: "Groups 2",
+			checkedRead: true,
+			checkedWrite: false,
+			checkedExecution: false
+		}
+	];
 
 	return (
 		<div className={styles.container}>
-			{showCreate && (
-				<CreateUser setShowCreate={setShowCreate} dispatch={dispatch} />
-			)}
+			{showCreate && <CreateUser setShowCreate={setShowCreate} />}
 			<fieldset className={styles.section}>
 				<legend>Access Control List</legend>
 				<div>
-					<table className={styles.tg}>
+					<table className={styles.table}>
 						<thead>
-							<tr>
-								<th className={styles.tgVqx1}></th>
-								<th className={styles.tgVqx1}>Entry</th>
-								<th className={styles.tgVqx1}>Read</th>
-								<th className={styles.tgVqx1}>Write</th>
-								<th className={styles.tgVqx1}>Execution</th>
-								<th className={styles.tgVqx2}></th>
+							<tr className={styles.thead}>
+								<th className={`${styles.th} ${styles.first_th}`}></th>
+								<th className={styles.th}>Entry</th>
+								<th className={styles.th}>Read</th>
+								<th className={styles.th}>Write</th>
+								<th className={styles.th}>Execution</th>
+								<th className={`${styles.th} ${styles.last_th}`}></th>
 							</tr>
 						</thead>
 						<tbody>
-							{selectedGroups.groups.map((row, index) => (
+							{groups?.map((group: object, index: number) => (
 								<tr
 									key={index}
-									className={selectedRow === row ? styles.selectedRow : ""}
-									onClick={() => handleRowClick(row)}>
-									<td className={styles.tg8jgo}>
+									onClick={() => handleRowClick(group)}
+									className={styles.trow}>
+									<td className={styles.tr}>
 										<Icon>person</Icon>
 									</td>
-									<td className={styles.tg8jgo}>{row.name}</td>
-									<td className={styles.tg8jgo}>
+									<td className={styles.tr}>{group.name}</td>
+									<td className={styles.tr}>
 										<input
 											type='checkbox'
 											tabindex='20'
 											name='edad'
-											checked={row.checkedRead}
+											checked={group.checkedRead}
 											value='20-39'
 											onClick={() =>
 												handleCheckClick(
-													selectedGroups.user,
-													row.name,
+													group.name,
 													"checkedRead",
-													row.checkedRead
+													group.checkedRead
 												)
 											}
 										/>
 									</td>
-									<td className={styles.tg8jgo}>
+									<td className={styles.tr}>
 										<input
 											type='checkbox'
 											tabindex='20'
-											checked={row.checkedWrite}
+											checked={group.checkedWrite}
 											name='edad'
 											value='20-39'
 											onClick={() =>
 												handleCheckClick(
-													selectedGroups.user,
-													row.name,
+													group.name,
 													"checkedWrite",
-													row.checkedWrite
+													group.checkedWrite
 												)
 											}
 											bdhd
 										/>
 									</td>
-									<td className={styles.tg8jgo}>
+									<td className={styles.tr}>
 										<input
 											type='checkbox'
 											tabindex='20'
-											checked={row.checkedExecution}
+											checked={group.checkedExecution}
 											name='edad'
 											value='20-39'
 											onClick={() =>
 												handleCheckClick(
-													selectedGroups.user,
-													row.name,
+													group.name,
 													"checkedExecution",
-													row.checkedExecution
+													group.checkedExecution
 												)
 											}
 										/>
@@ -153,24 +150,26 @@ export default function User({ State, setWindowsState }: IProps) {
 					</div>
 				</div>
 				<div>
-					<table className={styles.tg}>
+					<table className={styles.table}>
 						<thead>
-							<tr>
-								<th className={styles.tgVqx1}></th>
-								<th className={styles.tgVqx1}>Participant</th>
-								<th className={styles.tgVqx2}></th>
+							<tr className={styles.theader}>
+								<th className={`${styles.th} ${styles.first_th}`}></th>
+								<th className={styles.th}>Participant</th>
+								<th className={`${styles.th} ${styles.last_th}`}></th>
 							</tr>
 						</thead>
 						<tbody>
-							{data.map((row, index) => (
+							{users?.map((user, index) => (
 								<tr
 									key={index}
-									className={selectedRow === row ? styles.selectedRow : ""}
-									onClick={() => handleRowClick(row)}>
-									<td className={styles.tg8jgo}>
+									className={`${styles.trow} ${
+										selectedUser === user ? styles.selectedUser : ""
+									}`}
+									onClick={() => handleRowClick(user)}>
+									<td className={styles.tr}>
 										<Icon>person</Icon>
 									</td>
-									<td className={styles.tg8jgo}>{row.name}</td>
+									<td className={styles.tr}>{user.userName}</td>
 								</tr>
 							))}
 						</tbody>

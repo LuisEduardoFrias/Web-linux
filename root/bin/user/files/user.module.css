@@ -27,58 +27,79 @@
 	overflow: scroll;
 }
 
-.tg {
+/******** table  *********/
+
+.table {
+	width: 100%;
 	border-collapse: collapse;
 	border-color: #aaa;
-	border-spacing: 0;
 	box-sizing: border-box;
-	margin: 3px;
 	margin-block-start: 20px;
+	/*
+	border-spacing: 0;
+	border: 2px solid green;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;*/
 }
-.tg td {
-	background-color: #fff;
-	border-color: #aaa;
-	border-style: solid;
-	border-width: 0px;
-	color: #333;
-	font-family: Arial, sans-serif;
-	font-size: 14px;
-	overflow: hidden;
-	padding: 10px 5px;
-	word-break: normal;
+
+.thead {
+	/*	border: 2px solid red;*/
 }
-.tg th {
-	background: #d1d1d1d3;
+
+.th {
+	text-align: left;
+	padding: 8px;
 	background: linear-gradient(180deg, #d1d1d1d3 0%, #ffffff 100%);
-	border: 1px solid #999999;
+	border: 1px solid #545454;
 	color: #000000;
 	font-family: Arial, sans-serif;
 	font-size: 14px;
 	font-weight: bold;
-	overflow: hidden;
-	padding: 10px 5px;
+	vertical-align: central;
 	word-break: normal;
 	text-align: center;
+	box-sizing: border-box;
+	/*
+	padding: 10px 5px;
+	overflow: hidden;
+	width: 100px;
+	*/
+}
+
+.first_th {
 	width: 50px;
 }
-.tg .tg8jgo {
-	border-color: #ffffff;
-	text-align: center;
-	vertical-align: top;
+
+.last_th {
+	width: calc(100% - 150px);
 }
 
-.tg .tgVqx1 {
-	background-color: #a4a4a4;
-	border-color: #545454;
-	color: #000000;
-	text-align: center;
-	vertical-align: top;
-	width: 100px;
+.table .trow {
 }
 
-.tg .tgVqx2 {
-	width: 100%;
+.trow {
+	background-color: #ffffff;
+	text-align: center;
+	color: #333;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	word-break: normal;
+	vertical-align: central;
+	/*
+	background-color: #f2f2f2;
+	border: 0px solid #aaa;
+	overflow: hidden;
+	padding: 10px 5px;
+	*/
 }
+
+.trow .tr {
+}
+
+/**************************/
 
 .controlers {
 	display: flex;
@@ -111,7 +132,7 @@
 	gap: 5px;
 }
 
-.selectedRow {
+.selectedUser {
 	background-color: #1148ffc1;
 }
 

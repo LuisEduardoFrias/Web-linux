@@ -32,12 +32,14 @@ export default function Lock() {
 		event.preventDefault();
 		setLoader(true);
 		setTimeout(() => {
+			alert(passwordRef.current[1].value);
 			dispatch({
 				type: actions.unblock,
 				user: credential.user,
-				password: credential.password
+				password: passwordRef.current[1].value
 			});
-			setCredential({ user: "root", password: "" })
+			setCredential({ user: "root", password: "" });
+			passwordRef.current[1].value = "";
 			setLoader(false);
 		}, 1000);
 	}
@@ -58,6 +60,7 @@ export default function Lock() {
 		});
 
 		if (name === "password") {
+			passwordRef.current[1].value += passwordRef.current[0].value;
 			passwordRef.current[0].value = "";
 		}
 	}
@@ -106,6 +109,17 @@ export default function Lock() {
 							/>
 						</div>
 					</fieldset>
+
+					<input
+						ref={ref => (passwordRef.current[1] = ref)}
+						className='input'
+						autoComplete='off'
+						className={styles.password2}
+						autocapitalize='none'
+						name={"password2"}
+						id={"password2"}
+						onChange={handleChange}
+					/>
 
 					<button>Log in</button>
 				</form>
