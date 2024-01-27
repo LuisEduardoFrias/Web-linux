@@ -1,0 +1,6 @@
+{
+	"user":"all",
+	"name":"Storage",
+	"app": "storage.tsx",
+	"icon": "internal_icon_app/storage.svg"
+}

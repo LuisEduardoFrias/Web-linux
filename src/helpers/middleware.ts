@@ -33,17 +33,17 @@ export default function Middleware(
 						apps: await getApp(resp.token)
 					});
 				}
+
+				action.hidderLoader();
 			})();
 		},
 		loginKey: () => {
 			(async () => {
-				const data = getDataStorage(process.env.NEXT_PUBLIC_.LOGIN_KEY);
-
 				dispatch({
 					type: action.type,
 					unblock: action.unblock,
 					loading: action.loading,
-					apps: await getApp(data.token)
+					apps: await getApp(action.storage.login_key)
 				});
 			})();
 		},
@@ -59,6 +59,8 @@ export default function Middleware(
 					removeDataStorage(process.env.NEXT_PUBLIC_.LOGIN_KEY);
 
 					dispatch({ type: action.type });
+					
+					action.hiddenLoader()
 				} else {
 					//	throw Error("TODO");
 				}

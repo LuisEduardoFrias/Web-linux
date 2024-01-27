@@ -1,10 +1,21 @@
 /** @format */
 
-import { NextResponse, NextRequest } from "next/server";
 import os from "os";
+import { read } from "sv/rw";
+import { NextResponse, NextRequest } from "next/server";
 
-export async function GET(request: NextRequest) {
-	const { username } = os.userInfo();
+export async function POST(request: NextRequest) {
+	const { login_key } = await request.json();
+
+	const users: string = read(process.env.USERS_FILE);
+
+	const user: object = Reflect.ownKeys(users).filter(
+		(key: string) => users[key].token === login_key
+	)[0];
+
+	const username = users[user].userName;
+
+	//const username = os.userInfo();
 	const type = os.type();
 	const totalmem = os.totalmem();
 	const release = os.release();

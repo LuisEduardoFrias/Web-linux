@@ -39,12 +39,13 @@ export default function Core({ storage }: { storage: object }) {
 					dispatch({
 						type: actions.loginKey,
 						unblock: resp.unblock,
+						storage,
 						loading: false
 					});
 				}, 1500);
 			});
 		}
-	}, []);
+	}, [storage]);
 
 	return (
 		<div className={styles.core}>

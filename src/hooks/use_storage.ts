@@ -2,27 +2,25 @@
 
 export function getDataStorage(key: string) {
 	try {
-		const value = localStorage.getItem(key);
-		return value ? JSON.parse(value) : null;
-	} catch (error) {
-		console.log(error);
-		getDataStorage(key) 
+		const storage = localStorage.getItem(key);
+		return storage ? JSON.parse(storage) : null;
+	} catch (err: string) {
+		getDataStorage(key);
 	}
 }
 
 export function setDataStorage(key: string, data: object) {
 	try {
 		localStorage.setItem(key, JSON.stringify(data));
-	} catch (error) {
-		console.log(error);
-		setDataStorage(key, data) 
+	} catch (err: string) {
+		setDataStorage(key, data);
 	}
 }
 
 export function removeDataStorage(key: string) {
 	try {
 		localStorage.removeItem(key);
-	} catch (error) {
-		console.log(error);
+	} catch (err: string) {
+		removeDataStorage(key);
 	}
 }

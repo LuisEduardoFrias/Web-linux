@@ -1,0 +1,112 @@
+/** @format */
+
+.container {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	padding: 10px;
+	overflow: hidden;
+	overflow-y: auto;
+
+	display: flex;
+}
+
+.section {
+	width: 100%;
+
+	padding: 10px;
+	border-width: 1px;
+	font-size: 8px;
+}
+
+.form {
+	width: 100%;
+
+	box-sizing: border-box;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
+
+.containerSelectFile {
+	padding: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
+
+.label {
+	display: block;
+	color: #333;
+}
+
+.select {
+	font-size: 8px;
+}
+
+/* .inputfile {} */
+
+.input {
+	opacity: 0;
+	position: absolute;
+	top: -10000px;
+}
+
+.labelBtn {
+	width: 300px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.fileText {
+	width: 100%;
+	text-align: center;
+	height: 20px;
+	font-size: 8px;
+}
+
+.fileBtn {
+	width: 40%;
+	font-size: 12px;
+	background: #007bff;
+	color: #fff;
+	padding: 8px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-top: 10px;
+	text-align: center;
+	font-size: 8px;
+}
+
+.fileBtn:hover {
+	transform: scale(0.9);
+}
+
+.fileBtn:active {
+	transform: scale(0.9);
+}
+
+.loadButton {
+	width: 40%;
+	height: 25px;
+	background-color: #09e001e5;
+	border: 2px solid #45ff3ed2;
+	border-radius: 5px;
+	font-weight: 800;
+	font-size: 8px;
+}
+
+.loadButton:hover {
+	transform: scale(0.9);
+}
+
+.loadButton:active {
+	transform: scale(0.9);
+}

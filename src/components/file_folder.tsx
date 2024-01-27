@@ -51,7 +51,7 @@ export default function FileFolder(props: IFileFProps) {
 			)}
 			<span>
 				{obj.title}
-				{obj instanceof File && show_extention && `${obj.extention}`}
+				{obj instanceof File && show_extention && `.${obj.extention}`}
 			</span>
 		</div>
 	);

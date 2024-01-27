@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
 	const users: string = read(process.env.USERS_FILE);
 
-	Reflex.ownKeys(users).forEach((key: string) => {
+	Reflect.ownKeys(users).forEach((key: string) => {
 		if (users[key].token === login_key) {
 			users[key].token = "";
 			write(process.env.USERS_FILE, users);

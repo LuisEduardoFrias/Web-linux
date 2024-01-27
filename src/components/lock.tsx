@@ -32,15 +32,16 @@ export default function Lock() {
 		event.preventDefault();
 		setLoader(true);
 		setTimeout(() => {
-			alert(passwordRef.current[1].value);
 			dispatch({
 				type: actions.unblock,
 				user: credential.user,
-				password: passwordRef.current[1].value
+				password: passwordRef.current[1].value,
+				hidderLoader: () => {
+					setLoader(false);
+				}
 			});
-			setCredential({ user: "root", password: "" });
+			//	setCredential({ user: "root", password: "" });
 			passwordRef.current[1].value = "";
-			setLoader(false);
 		}, 1000);
 	}
 

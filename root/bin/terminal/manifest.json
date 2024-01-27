@@ -1,5 +1,6 @@
 {
 	"user":"all",
+	"name":"Terminal",
 	"app": "terminal.tsx",
 	"icon": "internal_icon_app/terminal.svg"
 }

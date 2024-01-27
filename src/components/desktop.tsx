@@ -26,8 +26,13 @@ export default function Desktop() {
 		border: "0px solid green",
 		position: "relative",
 		boxSizing: "border-box",
-		backgroundColor: "transparent",
-		overflow: "visible"
+		backgroundColor: "transparent", //"#ff000084",
+		overflow: "visible",
+		backgroundImage: "url('/dragon.png')",
+		backgroundSize: "cover",
+		backgroundSize: "50%",
+		backgroundRepeat: "no-repeat",
+		backgroundPosition: "center"
 	};
 
 	return (

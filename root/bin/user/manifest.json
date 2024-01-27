@@ -1,5 +1,6 @@
 {
 	"user": "root",
+	"root":"Root",
 	"app": "user.tsx",
 	"icon": "internal_icon_app/user.svg"
 }

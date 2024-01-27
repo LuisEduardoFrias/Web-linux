@@ -12,7 +12,7 @@ export default function Home() {
 	const [state, dispatch] = useSuperState(Reducer, initialState(), []);
 
 	const storage = getDataStorage(process.env.NEXT_PUBLIC_.LOGIN_KEY);
-	
+
 	if (storage) {
 		dispatch({
 			type: actions.loginKey,

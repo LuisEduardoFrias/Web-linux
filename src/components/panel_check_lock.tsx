@@ -29,9 +29,13 @@ export default function PanelChecklock() {
 
 	function changeToLock() {
 		setTimeout(() => {
-			dispatch({ type: actions.lock, islock: true });
+			dispatch({
+				type: actions.lock,
+				islock: true,
+				hiddenLoader: () => setIsLoader(false)
+			});
+
 			//setIsClose(false);
-			setIsLoader(false);
 		}, 3000);
 	}
 
