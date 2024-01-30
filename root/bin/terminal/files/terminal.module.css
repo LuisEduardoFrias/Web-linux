@@ -5,11 +5,12 @@
 	top: 0px;
 	left: 0px;
 	width: 100%;
+	background-color: transparent; /*rgb(36, 36, 36);*/
 	height: calc(100% + 1px);
-	background-color: rgb(36, 36, 36);
 	box-sizing: border-box;
 	border-radius: 0 0 3px 3px;
 	border: 0px solid green;
+	padding-block-start: 10px;
 }
 
 .textarea {
@@ -23,6 +24,7 @@
 	color: white;
 	resize: none;
 	border: none;
+	line-height: 1.2;
 	overflow-y: scroll;
 	padding-block-end: 30px;
 }

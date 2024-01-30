@@ -3,6 +3,7 @@
 import { NextResponse } from "next/server";
 import { read, write } from "sv/rw";
 import { readdirSync } from "fs";
+import AppMetaData from "md/app_meta_data";
 import path from "path";
 
 export async function POST(request: any) {
@@ -24,12 +25,12 @@ export async function POST(request: any) {
 					path.join(process.env.INTERNAL_APPS, `${e}/manifest.json`)
 				);
 
-				const appData: object = {
-					name: e,
-					iconPath: manifest.icon,
-					iswindow: true,
-					file: path.join(e, manifest.app)
-				};
+				const appData: AppMetaData = new AppMetaData(
+					e,
+				 manifest.icon,
+				 true,
+					path.join(e, manifest.app)
+				);
 
 				if (manifest.user === "all") {
 					return appData;

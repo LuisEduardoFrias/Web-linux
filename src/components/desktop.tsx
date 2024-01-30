@@ -45,7 +45,9 @@ export default function Desktop() {
 								<FileFolder key={inde} obj={obj} />
 							))}
 							{desk_.openWindows?.map((w: Wd, i: number) => (
-								<Window key={i} wd={w} />
+								<Window key={i} wd={w} windowsFocus={desk_.windowFocus} setFocus={()=>{
+	dispatch({ type: "setFocus", value: w, key: desk_.key});
+}} />
 							))}
 						</div>
 					);

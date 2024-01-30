@@ -4,12 +4,18 @@
 import Icon from "cp/icon";
 import Image from "next/image";
 import Mn from "md/menu";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import AppMetaData from "md/app_meta_data";
 
 import styles from "st/menu.module.css";
 import useSuperState from "hk/use_super_state";
 import Reducer, { actions } from "hp/reducer";
 import initialState from "hp/initial_state";
+
+interface showOption {
+	show: boolean;
+	app: AppMetaData;
+}
 
 interface App {
 	name: string;
@@ -22,12 +28,17 @@ export default function Menu() {
 		"menu"
 	]);
 
+	const [presionado, setPresionado] = useState(false);
+	let timeoutId;
+
 	const { menu, taskbar } = state;
 
-	const half: number = Math.ceil(menu.apps?.length / 2);
+	const [apps, setApps] = useState<AppMetaData[]>([...menu.apps]);
 
-	const firstHalf: AppMetaData[] = menu.apps?.slice(0, half);
-	const secondHalf: AppMetaData[] = menu.apps?.slice(half);
+	const half: number = Math.ceil(apps?.length / 2);
+
+	const firstHalf: AppMetaData[] = apps?.slice(0, half);
+	const secondHalf: AppMetaData[] = apps?.slice(half);
 
 	const _style = {
 		top: taskbar.panel_menu ? "0px" : "-10000px",
@@ -38,16 +49,50 @@ export default function Menu() {
 		dispatch({ type: actions.openApp, app: _app });
 	}
 
+	function handleMouseDown(app: AppMetaData) {
+		timeoutId = setTimeout(() => {
+			setApps((prev: AppMetaData[]) => {
+				const index: number = prev.findIndex(
+					(ap: AppMetaData) => ap.key === app.key
+				);
+				if (index !== -1) {
+					prev.forEach((pr: AppMetaData) => (pr.showOption = false));
+					prev[index].showOption = true;
+				}
+				return [...prev];
+			});
+		}, 900);
+	}
+
+	function handleMouseUp(app: AppMetaData) {
+		clearTimeout(timeoutId);
+		setApps((prev: AppMetaData[]) => {
+			const index: number = prev.findIndex(
+				(ap: AppMetaData) => ap.key === app.key
+			);
+
+			if (index !== -1) {
+				prev[index].showOption = false;
+			}
+			return [...prev];
+		});
+	}
+
 	function Row({ half }: AppMetaData[]): JSX.Element {
 		return (
 			<div className={styles.row}>
 				{half?.map((_app: AppMetaData, i: number) => (
-					<div
-						key={i}
-						className={styles.app}
-						onClick={() => {
-							handleClick(_app);
-						}}>
+					<div key={i} className={styles.app}>
+						{_app.showOption && <div className={styles.options}>optiones</div>}
+						<div
+							className={styles.facade}
+							onTouchStart={() => handleMouseDown(_app)}
+							onTouchEnd={() => handleMouseUp(_app)}
+							onMouseDown={() => handleMouseDown(_app)}
+							onMouseUp={() => handleMouseUp(_app)}
+							onClick={() => {
+								handleClick(_app);
+							}}></div>
 						<Image
 							src={_app.iconPath}
 							alt={_app.name}
@@ -56,7 +101,7 @@ export default function Menu() {
 							className={styles.img}
 							priority
 						/>
-						<span>{_app.name}</span>
+						<span style={{ userSelect: "none" }}>{_app.name}</span>
 					</div>
 				))}
 			</div>
@@ -65,7 +110,14 @@ export default function Menu() {
 
 	return (
 		<div className={styles.container_screen} style={_style}>
-			<div className={styles.screen}>
+			<div
+				className={styles.screen}
+				onClick={() => {
+					setApps((prev: AppMetaData[]) => {
+						prev.forEach((pr: AppMetaData) => (pr.showOption = false));
+						return [...prev];
+					});
+				}}>
 				<Row half={firstHalf} />
 				<Row half={secondHalf} />
 			</div>

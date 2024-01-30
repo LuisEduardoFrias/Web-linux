@@ -25,7 +25,8 @@ export enum actions {
 	showInfoPanel = "showInfoPanel",
 	openApp = "openApp",
 	changeWindowState = "changeWindowState",
-	closeApp = "closeApp"
+	closeApp = "closeApp",
+	setFocus = "setFocus"
 	/*
 	openFolder = "openFolder"*/
 }
@@ -106,6 +107,11 @@ export default function Reducer(state, action) {
 				desktop.openWindows.splice(index, 1);
 			}
 
+			return { ...state };
+		},
+		setFocus: () => {
+			/*const desk = state.desks.filter((desk: any) => desk.key === action.key);
+			desk.windowFocus = action.value;*/
 			return { ...state };
 		},
 		/*	

@@ -4,16 +4,18 @@
 	position: absolute;
 	border: 1px solid black;
 	box-sizing: border-box;
-	box-shadow: 0 0 5px 1px #273755;
+	box-shadow: 0 0 3px 1px #273755;
 	border-radius: 3px;
 	z-index: 2;
 	transition: width height 1s ease;
 	display: flex;
 	flex-direction: column;
+	background-color: #1f2a3eac;
+	backdrop-filter: blur(7px);
 	gap: 0;
 
 	& .bar {
-		background-color: #294986;
+		background-color: transparent; /* #294986; */
 		width: 100%;
 		height: 20px;
 		box-sizing: border-box;
@@ -29,7 +31,7 @@
 			position: relative;
 			box-sizing: border-box;
 			height: 100%;
-			width: 50px;
+			width: 60px;
 			border-radius: 0 2px 0 0;
 
 			display: flex;
@@ -63,7 +65,7 @@
 		width: 100%;
 		height: calc(100% - 30px);
 		border-radius: 0 0 3px 3px;
-		background-color: #ffffff;
+		background-color: transparent;
 		filter: blur(0.5);
 		box-sizing: border-box;
 		overflow-x: hidden;
@@ -87,16 +89,22 @@
 .contro_size > .icon:nth-child(1) {
 	top: 0px;
 	left: 10%;
+	background-color: hsl(191, 97.5%, 47.5%);
+	box-shadow: 0 0 3px 1px hsl(184.7, 99.5%, 66%);
 }
 
 .contro_size > .icon:nth-child(2) {
 	top: 0px;
 	left: 0%;
+	background-color: hsl(231.7,97.5%,47.5%);
+	box-shadow: 0 0 3px 1px hsl(233.2,99.5%,66%);
 }
 
 .contro_size > .icon:nth-child(3) {
 	top: 0px;
 	left: -5px;
+	background-color: hsl(266.1, 97.5%, 47.5%);
+	box-shadow: 0 0 3px 1px hsl(266.1, 99.5%, 66%);
 }
 
 .containerFile {
@@ -117,7 +125,7 @@
 }
 
 .menu {
-	background-color: #294986;
+	background-color: transparent; /* #294986; */
 	width: 100%;
 	box-sizing: border-box;
 	padding: 0;
@@ -136,8 +144,8 @@
 }
 
 .menu li:active {
-	background-color: #9fa3acf1;
+	background-color: #1f2a3ecd;
 }
 .menu li:hover {
-	background-color: #9fa3acf1;
+	background-color: #1f2a3ecd;
 }

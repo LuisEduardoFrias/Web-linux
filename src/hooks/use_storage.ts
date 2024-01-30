@@ -1,4 +1,5 @@
 /** @format */
+import {useState, useEffect} from "react";
 
 export function getDataStorage(key: string) {
 	try {

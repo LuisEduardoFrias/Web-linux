@@ -18,7 +18,7 @@ enum keys {
 
 export default function Terminal(props: ITerminalProps): JSX.Element {
 	//const [path, setPath] = useState();
-	const [prompt, setPrompt] = useState(`┌──(refi)-[~]\n└── $ `);
+	const [prompt, setPrompt] = useState(`┌─{》|《}-[~]\n└── $ `);
 
 	const [backlines, setBackLines] = useState<number>(prompt.length);
 	const [lines, setLines] = useState<string>(prompt);
@@ -35,7 +35,6 @@ export default function Terminal(props: ITerminalProps): JSX.Element {
 	const _style = {
 		//width: `${props.width ?? 100}%`,
 		//height: `${props.height ?? 100}%`,
-		lineHeight: "2"
 	};
 
 	async function handleKeyDown(
@@ -67,7 +66,7 @@ export default function Terminal(props: ITerminalProps): JSX.Element {
 			let newprompt = prompt;
 
 			if (cmd === "cd") {
-				newprompt = `┌──(refi)-[~${answer}]\n└── $ `;
+				newprompt = `┌─{T-Dragon}-[~${answer}]\n└── $ `;
 				setPrompt(newprompt);
 				//setLines(newprompt);
 			}

@@ -12,7 +12,7 @@ import {
 import path from "path";
 import { read, write } from "./rw";
 
-const filepath: string = "./src/navigation.json";
+const filepath: string = "./root/etc/users.json";
 
 export function cd(_path: string): string {
 	const homepath = "root/home/";
@@ -20,7 +20,7 @@ export function cd(_path: string): string {
 
 	if (_path === "" || !_path) newpath = homepath;
 
-	const navegation = read(filepath);
+	const navegation = getPN();
 
 	if (newpath === "..") {
 		newpath = path.join(navegation.path, "../");
@@ -31,8 +31,7 @@ export function cd(_path: string): string {
 	if (!existsSync(newpath))
 		return { answer: `not exits path '${newpath}'.`, cmd: "cd" };
 
-	if (navegation.path !== newpath)
-		write(filepath, { ...navegation, path: newpath });
+	if (navegation.path !== newpath) setPN(newpath);
 
 	return {
 		answer: newpath === homepath ? "" : newpath.replace(homepath, "/"),
@@ -44,7 +43,7 @@ export function ls(_path?: string): object {
 	if (_path === ".") return { answer: "restringido", cmd: "ls" };
 
 	let newpath: string = "";
-	const navegation = read(filepath);
+	const navegation = getPN();;
 
 	if (_path !== "" && _path) {
 		newpath = path.join(navegation.path, _path);
@@ -95,4 +94,16 @@ export function move(oldpath: string, newpath: string, option?: string) {
 
 	renameSync(oldpath, newpath);
 	return { answer: "", cmd: "move" };
+}
+
+function getPN(): string {
+	const objects = read(filepath);
+	return objects["root"];
+}
+
+function setPN(newPath: string) {
+	const objects = read(filepath);
+	const _obj: object = objects["root"];
+	_obj.path = newPath;
+	write(filepath, { ...objects });
 }

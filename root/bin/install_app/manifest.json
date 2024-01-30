@@ -1,0 +1,6 @@
+{
+	"user": "all",
+	"name": "Install App",
+	"app": "install_app.tsx",
+	"icon": "internal_icon_app/install_app.svg"
+}

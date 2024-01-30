@@ -16,6 +16,8 @@ import styles from "st/window.module.css";
 
 interface IWindowpProps {
 	wd: Wd;
+	windowsFocus: Wd;
+	setFocus: () => {};
 }
 
 export default function Window(props: IWindowpProps) {
@@ -89,25 +91,31 @@ export default function Window(props: IWindowpProps) {
 			bounds={{ left: -1000, top: 0, right: 1000, bottom: 1000 }}
 			disabled={_wd.state == WindowState.maximum ? true : false}
 			scale={1}>
-			<div className={styles.window} style={_style}>
+			<div
+				className={styles.window}
+				style={_style}
+				onClick={() => {
+					if (props.windowsFocus?.key !== props.wd.key)
+						props.setFocus();
+				}}>
 				<div className={styles.bar}>
 					<div className={`handle ${styles.handle_}`}>
 						<span>{_wd.title}</span>
 					</div>
 					<div className={styles.contro_size}>
 						{/*minimized*/}
-						<Icon className={styles.icon}>close_fullscreen</Icon>
+						<Icon className={styles.icon}></Icon> {/* close_fullscreen */}
 						{/*maximum and normal*/}
 						<Icon className={styles.icon} onclick={handleChangeState}>
-							{_wd.state == WindowState.maximum
+							{/* _wd.state == WindowState.maximum
 								? "fullscreen_exit"
-								: "fullscreen"}
+								: "fullscreen" */}
 						</Icon>
 						{/*close*/}
 						<Icon
 							className={styles.icon}
 							onclick={() => dispatch({ type: actions.closeApp, window: _wd })}>
-							close
+							{/* close */}
 						</Icon>
 					</div>
 				</div>

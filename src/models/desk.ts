@@ -12,6 +12,7 @@ export default class Desk {
 	key: string;
 	fileFolders: (File | Forder)[];
 	openWindows: Window[];
+	windowFocus: Window;
 	name: string;
 
 	constructor(fileFolders: (File | Forder)[], desktop: string) {
