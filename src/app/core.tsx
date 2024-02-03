@@ -8,6 +8,7 @@ import Screen from "cp/screen";
 import Window from "cp/window";
 import Lock from "cp/lock";
 import Desktop from "cp/desktop";
+import Dock from "cp/dock";
 import Volume from "cp/volume";
 import Menu from "cp/menu";
 import Info from "cp/info";
@@ -61,6 +62,7 @@ export default function Core({ storage }: { storage: object }) {
 						<div className={styles.container_desk}>
 							<div>
 								<Desktop />
+								<Dock />
 								<Menu />
 								<Volume />
 								<Info />

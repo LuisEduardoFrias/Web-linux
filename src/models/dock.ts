@@ -1,6 +1,7 @@
+
 import AppMetaData from 'md/app_meta_data'
 
-export default class Menu {
+export default class Dock {
  
  apps: AppMetaData[];
  

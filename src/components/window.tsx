@@ -2,7 +2,8 @@
 
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import CircularJSON from "circular-json";
 import Draggable from "react-draggable";
 import dynamic from "next/dynamic";
 import LdDualRing from "./ld_dual_ring";
@@ -20,32 +21,153 @@ interface IWindowpProps {
 	setFocus: () => {};
 }
 
-export default function Window(props: IWindowpProps) {
+function useWindow() {
 	const [state, dispatch] = useSuperState(Reducer, initialState(), []);
-	const [_wd, setWd] = useState(props.wd);
 
 	const size = useSize();
+	const [_wd, setWd] = useState(props.wd);
 
-	_wd.size.w =
-		_wd.state == WindowState.normal
-			? size.width / 2
-			: _wd.state == WindowState.maximum
-			? size.width
-			: 0;
+	useEffect(() => {
+		setWd((prev: Wd) => {
+			const wd_: Wd = { ...prev };
 
-	_wd.size.h =
-		_wd.state == WindowState.normal
-			? size.height / 2
-			: _wd.state == WindowState.maximum
-			? size.height
-			: 0;
+			if (wd_.state == WindowState.normal) {
+				wd_.size.w = size.width / 2;
+				wd_.size.h = size.height / 2;
+				wd_.point.x = size.width / 2 - wd_.size.w / 2;
+				wd_.point.y = size.height / 2 - wd_.size.h / 2;
+			} else if (wd_.state == WindowState.maximum) {
+				wd_.size.w = size.width;
+				wd_.size.h = size.height;
+				wd_.point.x = 0;
+				wd_.point.y = 0;
+			}
+			return { ...wd_ };
+		});
+	}, [size]);
 
-	_wd.point.x = 0; /*
-		_wd.state == WindowState.normal ? size.width / 2 - _wd.size.w / 2 : 0; */
+	return [_wd, setWd, dispatch];
+}
 
-	_wd.point.y = 0;
-	/*	_wd.state == WindowState.normal ? size.height / 2 - _wd.size.h / 2 : 0; */
+export default function Window(props: IWindowpProps): ReactElement {
+	const [_wd, setWd, dispatch] = useWindow();
 
+	function handleChangeState() {
+		setWd((prev: Wd) => {
+			const wd_: Wd = { ...prev };
+			if (wd_.state == WindowState.maximum) {
+				wd_.size.w = size.width / 2;
+				wd_.size.h = size.height / 2;
+				wd_.point.x = size.width / 2 - wd_.size.w / 2;
+				wd_.point.y = size.height / 2 - wd_.size.h / 2;
+				wd_.state = WindowState.normal;
+			} else if (wd_.state == WindowState.normal) {
+				wd_.size.w = size.width;
+				wd_.size.h = size.height;
+				wd_.point.x = 0;
+				wd_.point.y = 0;
+				wd_.state = WindowState.maximum;
+			}
+			return { ...wd_ };
+		});
+	}
+
+	const _style = {
+		width: `${_wd.size.w}px`,
+		height: `${_wd.size.h - 30}px`,
+		left: `${_wd.point.x}px`,
+		top: `${_wd.point.y}px`
+	};
+
+	function Dispatch(obj: object) {
+		if (obj.type !== "") {
+			dispatch(obj);
+		}
+	}
+
+	return (
+		<WindowDraggable>
+			<WindowResize>
+				<WindowBar />
+				<WindowContainer />
+			</WindowResize>
+		</WindowDraggable>
+	);
+}
+
+function WindowDraggable(children: ReactElement): ReactElement {
+	return (
+		<Draggable
+			axis={"both"}
+			handle={".handle"}
+			bounds={{ left: -1000, top: 0, right: 1000, bottom: 1000 }}
+			disabled={_wd.state == WindowState.maximum ? true : false}
+			defaultPosition={{ x: _wd.point.x, y: _wd.point.y }}
+			positionOffset={{ x: 0, y: 0 }}
+			scale={1}>
+			{children}
+		</Draggable>
+	);
+}
+
+function WindowResize({ children }: { children: ReactNode }): ReactElement {
+	return (
+		<div>
+			<div
+				className={styles.window}
+				style={_style}
+				onClick={() => {
+					if (props.windowsFocus?.key !== props.wd.key) props.setFocus();
+				}}>
+				{children}
+			</div>
+		</div>
+	);
+}
+
+function WindowBar(): ReactElement {
+	function handleMinized() {
+		setWd((prev: Wd) => {
+			prev.size.w = 0;
+			prev.size.h = 0;
+			prev.point.x = 0;
+			prev.point.y = -1000;
+			return { ..._wd, state: WindowState.minimized };
+		});
+		dispatch({ type: actions.minimized, app: _wd.app });
+	}
+
+	function handleClose() {
+		dispatch({ type: actions.closeApp, window: _wd });
+	}
+
+	return (
+		<div className={styles.bar}>
+			<div className={`handle ${styles.handle_}`}>
+				<span>{title}</span>
+			</div>
+			<div className={styles.bar_control}>
+				<buttonControl
+					className={`${styles.icon} ${styles.minimized}`}
+					onclick={handleMinized}></buttonControl>
+
+				<buttonControl
+					className={`${styles.icon} ${styles.maximumNormal}`}
+					onclick={handleChangeState}></buttonControl>
+
+				<buttonControl
+					className={`${styles.icon} ${styles.close}`}
+					onclick={handleClose}></buttonControl>
+			</div>
+		</div>
+	);
+}
+
+function buttonControl(props) {
+	return <button {...props}></button>;
+}
+
+function WindowContainer() {
 	const DynamicComponet = useMemo(
 		() =>
 			dynamic(() => import(`../../root/bin/${_wd.url}`), {
@@ -63,138 +185,16 @@ export default function Window(props: IWindowpProps) {
 		[_wd.url]
 	);
 
-	function handleChangeState() {
-		if (_wd.state == WindowState.maximum) {
-			setWd({ ..._wd, state: WindowState.normal });
-		} else if (_wd.state == WindowState.normal) {
-			setWd({ ..._wd, state: WindowState.maximum });
-		}
-	}
-
-	const _style = {
-		width: `${_wd.size.w}px`,
-		height: `${_wd.size.h - 30}px`,
-		left: `${_wd.point.x}px`,
-		top: `${_wd.point.y}px`
-	};
-
-	function Dispatch(obj: object) {
-		if (obj.type !== "") {
-			dispatch(obj);
-		}
-	}
-
 	return (
-		<Draggable
-			axis='both'
-			handle='.handle'
-			bounds={{ left: -1000, top: 0, right: 1000, bottom: 1000 }}
-			disabled={_wd.state == WindowState.maximum ? true : false}
-			scale={1}>
-			<div
-				className={styles.window}
-				style={_style}
-				onClick={() => {
-					if (props.windowsFocus?.key !== props.wd.key)
-						props.setFocus();
-				}}>
-				<div className={styles.bar}>
-					<div className={`handle ${styles.handle_}`}>
-						<span>{_wd.title}</span>
-					</div>
-					<div className={styles.contro_size}>
-						{/*minimized*/}
-						<Icon className={styles.icon}></Icon> {/* close_fullscreen */}
-						{/*maximum and normal*/}
-						<Icon className={styles.icon} onclick={handleChangeState}>
-							{/* _wd.state == WindowState.maximum
-								? "fullscreen_exit"
-								: "fullscreen" */}
-						</Icon>
-						{/*close*/}
-						<Icon
-							className={styles.icon}
-							onclick={() => dispatch({ type: actions.closeApp, window: _wd })}>
-							{/* close */}
-						</Icon>
-					</div>
-				</div>
-				<ul className={styles.menu}>
-					<li>archivo</li>
-					<li>editar</li>
-					<li>ver</li>
-					<li>ayuda</li>
-				</ul>
-				<div className={styles.container}>
-					{
-						<DynamicComponet
-							width={_wd.size.w}
-							height={_wd.size.h - 28}
-							State={state["profiles"]}
-							dispatch={Dispatch}
-						/>
-					}
-				</div>
-			</div>
-		</Draggable>
+		<div className={styles.container}>
+			<DynamicComponet State={state["profiles"]} dispatch={Dispatch} />
+		</div>
 	);
 }
 
-const data = [
-	{
-		name: "luis",
-		groups: [
-			{
-				name: "group1",
-				checkedRead: true,
-				checkedWrite: false,
-				checkedExecution: true
-			},
-			{
-				name: "group2",
-				checkedRead: true,
-				checkedWrite: true,
-				checkedExecution: false
-			},
-			{
-				name: "group3",
-				checkedRead: false,
-				checkedWrite: false,
-				checkedExecution: true
-			}
-		]
-	},
-	{
-		name: "junior",
-		groups: [
-			{
-				name: "group1",
-				checkedRead: true,
-				checkedWrite: true,
-				checkedExecution: true
-			}
-		]
-	},
-	{
-		name: "carlos",
-		groups: [
-			{
-				name: "group1",
-				checkedRead: false,
-				checkedWrite: false,
-				checkedExecution: false
-			},
-			{
-				name: "group3",
-				checkedRead: true,
-				checkedWrite: false,
-				checkedExecution: true
-			}
-		]
-	}
-];
 
 /*
+
 // Tipos:
 type DraggableEventHandler = (e: Event, data: DraggableData) => void | false;
 type DraggableData = {

@@ -25,7 +25,7 @@
 		grid-template-rows: 1fr;
 		grid-template-areas: "title size";
 
-		& .contro_size {
+		& .bar_control {
 			grid-area: size;
 			justify-self: end;
 			position: relative;
@@ -96,8 +96,8 @@
 .contro_size > .icon:nth-child(2) {
 	top: 0px;
 	left: 0%;
-	background-color: hsl(231.7,97.5%,47.5%);
-	box-shadow: 0 0 3px 1px hsl(233.2,99.5%,66%);
+	background-color: hsl(231.7, 97.5%, 47.5%);
+	box-shadow: 0 0 3px 1px hsl(233.2, 99.5%, 66%);
 }
 
 .contro_size > .icon:nth-child(3) {

@@ -103,7 +103,7 @@ export default function Lock() {
 								ref={ref => (passwordRef.current[0] = ref)}
 								className='input'
 								autoComplete='off'
-								autocapitalize='none'
+								//autocapitalize='none'
 								name={"password"}
 								id={"password"}
 								onChange={handleChange}
@@ -116,7 +116,7 @@ export default function Lock() {
 						className='input'
 						autoComplete='off'
 						className={styles.password2}
-						autocapitalize='none'
+						//autocapitalize='none'
 						name={"password2"}
 						id={"password2"}
 						onChange={handleChange}

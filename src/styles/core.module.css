@@ -9,6 +9,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	overflow: hidden;
 }
 
 .container_desk {
@@ -17,6 +18,7 @@
 	box-sizing: border-box;
 	position: relative;
 	border: 0 solid green;
+	overflow: hidden;
 	
 }
 

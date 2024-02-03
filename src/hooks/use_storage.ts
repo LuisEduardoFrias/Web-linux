@@ -1,13 +1,14 @@
 /** @format */
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 
 export function getDataStorage(key: string) {
-	try {
-		const storage = localStorage.getItem(key);
-		return storage ? JSON.parse(storage) : null;
-	} catch (err: string) {
-		getDataStorage(key);
-	}
+	const [storage, setStorage] = useState(null);
+
+	useEffect(() => {
+		setStorage(localStorage.getItem(key));
+	}, []);
+	
+	return storage ? JSON.parse(storage) : null;
 }
 
 export function setDataStorage(key: string, data: object) {

@@ -3,6 +3,7 @@
 import Tb, { Position } from "md/task_bar";
 import Dk from "md/desk";
 import File from "md/file";
+import Dock from "md/dock";
 import Folder from "md/folder";
 import AppMetaData from "md/app_meta_data";
 import Menu from "md/menu";
@@ -22,6 +23,7 @@ export default function initialState() {
 	//desk1.addWindow({ name: "jemplo", iconPath: "string", iswindow: true });
 
 	const apps: AppMetaData[] = [];
+	const dock: Dock = new Dock(apps);
 	const menu = new Menu(apps);
 
 	//const panelPoint:Point = new Point(-30, 0);
@@ -35,7 +37,8 @@ export default function initialState() {
 		taskbar: new Tb(30, desk1, TbPoint, 80),
 		unblock: false,
 		loading: false,
-		menu
+		menu,
+		dock,
 		/*initDt: new Dt(500, 250),
   confLock: new Lk(),
   confPanel: new Panel(panelPoint, panelSize),

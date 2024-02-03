@@ -66,6 +66,7 @@ export default function Menu() {
 
 	function handleMouseUp(app: AppMetaData) {
 		clearTimeout(timeoutId);
+		/*	
 		setApps((prev: AppMetaData[]) => {
 			const index: number = prev.findIndex(
 				(ap: AppMetaData) => ap.key === app.key
@@ -76,6 +77,11 @@ export default function Menu() {
 			}
 			return [...prev];
 		});
+		*/
+	}
+
+	function handleOption(value: string) {
+		alert(value);
 	}
 
 	function Row({ half }: AppMetaData[]): JSX.Element {
@@ -83,16 +89,39 @@ export default function Menu() {
 			<div className={styles.row}>
 				{half?.map((_app: AppMetaData, i: number) => (
 					<div key={i} className={styles.app}>
-						{_app.showOption && <div className={styles.options}>optiones</div>}
-						<div
+						{_app.showOption && (
+							<div className={styles.options}>
+								<ul className={styles.ul}>
+									<li
+										className={styles.li}
+										onClick={() => handleOption("unistall")}>
+										uninstall
+									</li>
+									<li
+										className={styles.li}
+										onClick={() => handleOption("add_dock")}>
+										add dock
+									</li>
+								</ul>
+							</div>
+						)}
+						<button
 							className={styles.facade}
-							onTouchStart={() => handleMouseDown(_app)}
-							onTouchEnd={() => handleMouseUp(_app)}
-							onMouseDown={() => handleMouseDown(_app)}
-							onMouseUp={() => handleMouseUp(_app)}
-							onClick={() => {
+							onClick={(e: any) => {
 								handleClick(_app);
-							}}></div>
+							}}
+							onTouchStart={(e: any) => {
+								handleMouseDown(_app);
+							}}
+							onTouchEnd={(e: any) => {
+								handleMouseUp(_app);
+							}}
+							onMouseDown={(e: any) => {
+								handleMouseDown(_app);
+							}}
+							onMouseUp={(e: any) => {
+								handleMouseUp(_app);
+							}}></button>
 						<Image
 							src={_app.iconPath}
 							alt={_app.name}

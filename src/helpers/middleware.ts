@@ -49,21 +49,16 @@ export default function Middleware(
 		},
 		lock() {
 			(async () => {
-				const data = getDataStorage(process.env.NEXT_PUBLIC_.LOGIN_KEY);
 
-				if (data) {
-					const resp = await Post("lock", {
-						login_key: data.login_key
-					});
+				const resp = await Post("lock", {
+					login_key: action.login_key
+				});
 
-					removeDataStorage(process.env.NEXT_PUBLIC_.LOGIN_KEY);
+				removeDataStorage(process.env.NEXT_PUBLIC_.LOGIN_KEY);
 
-					dispatch({ type: action.type });
-					
-					action.hiddenLoader()
-				} else {
-					//	throw Error("TODO");
-				}
+				dispatch({ type: action.type });
+
+				action.hiddenLoader();
 			})();
 		},
 		default: () => {

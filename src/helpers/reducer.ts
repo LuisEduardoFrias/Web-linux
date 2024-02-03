@@ -26,7 +26,8 @@ export enum actions {
 	openApp = "openApp",
 	changeWindowState = "changeWindowState",
 	closeApp = "closeApp",
-	setFocus = "setFocus"
+	setFocus = "setFocus",
+	minimized = "minimized"
 	/*
 	openFolder = "openFolder"*/
 }
@@ -80,6 +81,7 @@ export default function Reducer(state, action) {
 				new Window(
 					action.app.name,
 					action.app.file,
+					action.app,
 					new Point(0, 0),
 					new Size(300, 200)
 				)
@@ -87,6 +89,10 @@ export default function Reducer(state, action) {
 
 			state.taskbar.panel_menu = false;
 
+			return { ...state };
+		},
+		minimized: () => {
+			 state.dock.apps.push(action.app);
 			return { ...state };
 		},
 		changeWindowState: () => {

@@ -7,6 +7,7 @@ import CardNotification, { ModalType } from "cp/card_notification";
 import styles from "st/panel_check_lock.module.css";
 import { useState } from "react";
 import useSize from "hk/use_size";
+import { getDataStorage } from "hk/use_storage";
 
 import useSuperState from "hk/use_super_state";
 import Reducer, { actions } from "hp/reducer";
@@ -16,6 +17,7 @@ import Middleware from "hp/middleware";
 export default function PanelChecklock() {
 	const [isClose, setIsClose] = useState(false);
 	const [isLoader, setIsLoader] = useState(true);
+	const data = getDataStorage(process.env.NEXT_PUBLIC_.LOGIN_KEY);
 
 	const [state, dispatch] = useSuperState(
 		Reducer,
@@ -29,8 +31,10 @@ export default function PanelChecklock() {
 
 	function changeToLock() {
 		setTimeout(() => {
+		if(data?.login_key)
 			dispatch({
 				type: actions.lock,
+				login_key: data.login_key,
 				islock: true,
 				hiddenLoader: () => setIsLoader(false)
 			});

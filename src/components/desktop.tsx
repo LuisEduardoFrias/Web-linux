@@ -27,12 +27,13 @@ export default function Desktop() {
 		position: "relative",
 		boxSizing: "border-box",
 		backgroundColor: "transparent", //"#ff000084",
-		overflow: "visible",
+		overflow: "hidden",
 		backgroundImage: "url('/dragon.png')",
 		backgroundSize: "cover",
 		backgroundSize: "50%",
 		backgroundRepeat: "no-repeat",
-		backgroundPosition: "center"
+		backgroundPosition: "center",
+		border: "0px solid red"
 	};
 
 	return (
@@ -44,10 +45,16 @@ export default function Desktop() {
 							{desk_.fileFolders.map((obj: File | Folder, inde: number) => (
 								<FileFolder key={inde} obj={obj} />
 							))}
+
 							{desk_.openWindows?.map((w: Wd, i: number) => (
-								<Window key={i} wd={w} windowsFocus={desk_.windowFocus} setFocus={()=>{
-	dispatch({ type: "setFocus", value: w, key: desk_.key});
-}} />
+								<Window
+									key={i}
+									wd={w}
+									windowsFocus={desk_.windowFocus}
+									setFocus={() => {
+										dispatch({ type: "setFocus", value: w, key: desk_.key });
+									}}
+								/>
 							))}
 						</div>
 					);
@@ -55,3 +62,50 @@ export default function Desktop() {
 		</>
 	);
 }
+
+import React, { useRef, useEffect } from "react";
+
+const DraggableWindow = () => {
+	const windowRef = useRef(null);
+	const barRef = useRef(null);
+
+	useEffect(() => {
+		windowRef.addEventListener("dragstart", event => {
+			alert("start");
+			//    	event.dataTransfer.setData("text/plain", "This text may be dragged")
+		});
+		windowRef.addEventListener("dragend", event => {
+			alert("end");
+			//event.dataTransfer.setData("text/plain", "This text may be dragged")
+		});
+		windowRef.addEventListener("drag", event => {
+			alert("drag");
+			//	event.dataTransfer.setData("text/plain", "This text may be dragged")
+		});
+	}, []);
+
+	return (
+		<div
+			ref={windowRef}
+			className='window'
+			style={{
+				width: "200px",
+				height: "150px",
+				backgroundColor: "red",
+				border: "1px solid black"
+			}}
+			draggable='true'>
+			<div
+				ref={barRef}
+				className='bar'
+				style={{
+					width: "100%",
+					height: "30px",
+					cursor: "move",
+					backgroundColor: "lightgray"
+				}}>
+				Drag me!
+			</div>
+		</div>
+	);
+};

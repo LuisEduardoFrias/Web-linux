@@ -17,6 +17,8 @@ export default function Info() {
 	const [state, dispatch] = useSuperState(Reducer, initialState(), ["taskbar"]);
 
 	const [info, setInfo] = useState(null);
+	const data = getDataStorage(process.env.NEXT_PUBLIC_.LOGIN_KEY);
+
 	const { taskbar } = state;
 
 	const _style: React.CSSProperties = {
@@ -29,11 +31,10 @@ export default function Info() {
 
 	useEffect(() => {
 		(async () => {
-			const data = getDataStorage(process.env.NEXT_PUBLIC_.LOGIN_KEY);
-			
-			setInfo(await Post("info", { login_key: data.login_key }));
+			if (data?.login_key)
+				setInfo(await Post("info", { login_key: data?.login_key }));
 		})();
-	}, []);
+	}, [data?.login_key]);
 
 	return (
 		<div className={styles.container} style={_style}>
