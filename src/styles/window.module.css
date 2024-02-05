@@ -1,151 +1,123 @@
 /** @format */
 
-.window {
-	position: absolute;
-	border: 1px solid black;
+.window_resize_out {
+	width: 100%;
+	height: 100%;
+	background-color: transparent;
+	padding: 0px;
 	box-sizing: border-box;
 	box-shadow: 0 0 3px 1px #273755;
-	border-radius: 3px;
+	border-radius: 0 0 3px 3px;
 	z-index: 2;
 	transition: width height 1s ease;
-	display: flex;
-	flex-direction: column;
-	background-color: #1f2a3eac;
-	backdrop-filter: blur(7px);
-	gap: 0;
+	border: 3px solid #252541;
 
-	& .bar {
-		background-color: transparent; /* #294986; */
+	& .window_resize_in {
+		border: 0px solid blue;
 		width: 100%;
-		height: 20px;
+		height: 100%;
 		box-sizing: border-box;
-		border-radius: 3px 3px 0 0;
-		display: grid;
-		grid-template-columns: 1fr 50px;
-		grid-template-rows: 1fr;
-		grid-template-areas: "title size";
+		background-color: #1f2a3eac;
+		backdrop-filter: blur(7px);
 
-		& .bar_control {
-			grid-area: size;
-			justify-self: end;
-			position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+
+		& .container_bar {
+			background-color: transparent; /* #294986; */
+			width: 100%;
+			height: 20px;
 			box-sizing: border-box;
-			height: 100%;
-			width: 60px;
-			border-radius: 0 2px 0 0;
+			box-shadow: 0px 3px 6px #1111ff68;
+
+			border: 1px solid red;
 
 			display: flex;
-			justify-content: center;
-			align-items: center;
 
-			& .icon {
+			& .bar_title {
+				border: 1px solid green;
 				box-sizing: border-box;
-				width: 20px;
-				height: 20px;
+				text-align: center;
+				width: 100%;
+				box-sizing: border-box;
+			}
 
-				border-radius: 50%;
-				margin: 0;
-				padding: 0;
-				transform: scale(0.5);
+			& .bar_control {
+				border: 1px solid yellow;
+				box-sizing: border-box;
+				grid-area: size;
+				justify-self: end;
 				position: relative;
+				box-sizing: border-box;
+				height: 100%;
+				width: 60px;
+				border-radius: 0 2px 0 0;
 
 				display: flex;
 				justify-content: center;
 				align-items: center;
-			}
 
-			& .icon:active {
-				background-color: #4988ff;
+				& .icon {
+					box-sizing: border-box;
+					width: 20px;
+					height: 20px;
+
+					border-radius: 50%;
+					margin: 0;
+					padding: 0;
+					transform: scale(0.5);
+					position: relative;
+
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+
+				& .icon:active {
+					background-color: #4988ff;
+				}
 			}
 		}
-	}
 
-	& .container {
-		position: relative;
-		width: 100%;
-		height: calc(100% - 30px);
-		border-radius: 0 0 3px 3px;
-		background-color: transparent;
-		filter: blur(0.5);
-		box-sizing: border-box;
-		overflow-x: hidden;
-		overflow-y: auto;
+		& .container {
+			position: relative;
+			width: 100%;
+			height: calc(100% - 30px);
+			border-radius: 0 0 3px 3px;
+			background-color: transparent;
+			filter: blur(0.5);
+			box-sizing: border-box;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
 	}
 }
 
-.handle_ {
-	text-align: center;
-	width: 100%;
-	box-sizing: border-box;
-}
-
-.bar span {
+.bar_title span {
 	grid-area: title;
 	font-size: 10px;
 	justify-self: center;
 	align-self: center;
 }
 
-.contro_size > .icon:nth-child(1) {
+.bar_control > .icon:nth-child(1) {
 	top: 0px;
 	left: 10%;
 	background-color: hsl(191, 97.5%, 47.5%);
 	box-shadow: 0 0 3px 1px hsl(184.7, 99.5%, 66%);
 }
 
-.contro_size > .icon:nth-child(2) {
+.bar_control > .icon:nth-child(2) {
 	top: 0px;
 	left: 0%;
 	background-color: hsl(231.7, 97.5%, 47.5%);
 	box-shadow: 0 0 3px 1px hsl(233.2, 99.5%, 66%);
 }
 
-.contro_size > .icon:nth-child(3) {
+.bar_control > .icon:nth-child(3) {
 	top: 0px;
 	left: -5px;
 	background-color: hsl(266.1, 97.5%, 47.5%);
 	box-shadow: 0 0 3px 1px hsl(266.1, 99.5%, 66%);
-}
-
-.containerFile {
-	width: 100%;
-	height: 100%;
-	padding: 3px;
-	box-sizing: border-box;
-	border-radius: 0 0 3px 3px;
-
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	align-items: flex-start;
-	align-content: flex-start;
-	gap: 5px;
-
-	overflow-y: scroll;
-}
-
-.menu {
-	background-color: transparent; /* #294986; */
-	width: 100%;
-	box-sizing: border-box;
-	padding: 0;
-	margin: 0;
-
-	display: flex;
-	align-items: center;
-	gap: 5px;
-	list-style: none;
-}
-
-.menu li {
-	font-size: 8px;
-	width: 40px;
-	text-align: center;
-}
-
-.menu li:active {
-	background-color: #1f2a3ecd;
-}
-.menu li:hover {
-	background-color: #1f2a3ecd;
 }

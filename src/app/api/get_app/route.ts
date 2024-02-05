@@ -26,9 +26,9 @@ export async function POST(request: any) {
 				);
 
 				const appData: AppMetaData = new AppMetaData(
-					e,
-				 manifest.icon,
-				 true,
+					manifest.name,
+					manifest.icon,
+					true,
 					path.join(e, manifest.app)
 				);
 

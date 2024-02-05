@@ -12,7 +12,7 @@ export default class Desk {
 	key: string;
 	fileFolders: (File | Forder)[];
 	openWindows: Window[];
-	windowFocus: Window;
+	windowFocus: string;
 	name: string;
 
 	constructor(fileFolders: (File | Forder)[], desktop: string) {
@@ -20,6 +20,7 @@ export default class Desk {
 		this.fileFolders = fileFolders;
 		this.name = desktop;
 		this.openWindows = [];
+		this.windowFocus = "";
 	}
 
 	addWindow(app: AppMetaData) {

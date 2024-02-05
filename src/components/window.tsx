@@ -3,55 +3,124 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
+import dynamic from "next/dynamic";
 import CircularJSON from "circular-json";
 import Draggable from "react-draggable";
-import dynamic from "next/dynamic";
-import LdDualRing from "./ld_dual_ring";
-import Icon from "./icon";
+
+import Dk from "md/desk";
+import Size from "md/size";
+import Point from "md/point";
 import Wd, { WindowState } from "md/window";
+
+import LdDualRing from "cp/ld_dual_ring";
+import Icon from "cp/icon";
+
+import { actions } from "hp/reducer";
+import useWindow from "hk/use_window";
 import useSize from "hk/use_size";
-import useSuperState from "hk/use_super_state";
-import Reducer, { actions } from "hp/reducer";
-import initialState from "hp/initial_state";
 import styles from "st/window.module.css";
 
 interface IWindowpProps {
 	wd: Wd;
-	windowsFocus: Wd;
-	setFocus: () => {};
+	haveFocus: boolean;
 }
 
-function useWindow() {
-	const [state, dispatch] = useSuperState(Reducer, initialState(), []);
+export default function Window({
+	wd,
+	haveFocus
+}: IWindowpProps): React.ReactElement {
+	//
+	const [_wd, setWd, dph] = useWindow(wd);
 
+	return (
+		<WindowDraggable {..._wd}>
+			<WindowResize {..._wd} haveFocus={haveFocus} setWd={setWd}>
+				<WindowBar {..._wd} keys={_wd.key} setWd={setWd} dispatch={dph} />
+				<WindowContainer {..._wd} />
+			</WindowResize>
+		</WindowDraggable>
+	);
+}
+
+function WindowDraggable({
+	state,
+	point,
+	children
+}: {
+	state: WindowStateñ;
+	point: Point;
+	children: React.ReactElement;
+}): React.ReactElement {
+	return (
+		<Draggable
+			axis={"both"}
+			handle={".bar"}
+			bounds={{ left: -1000, top: 0, right: 1000, bottom: 1000 }}
+			disabled={state == WindowState.maximum ? true : false}
+			defaultPosition={{ x: point.x, y: point.y }}
+			positionOffset={{ x: 0, y: 0 }}
+			scale={1}>
+			{children}
+		</Draggable>
+	);
+}
+
+function WindowResize({
+	haveFocus,
+	size,
+	point,
+	children
+}: {
+	haveFocus: boolean;
+	size: Size;
+	point: Point;
+	children: React.ReactNode;
+}): React.ReactElement {
+	const _style = {
+		width: `${size.w}px`,
+		height: `${size.h - 30}px`,
+		left: `${point.x}px`,
+		top: `${point.y}px`,
+		ZIndex: `${haveFocus ? 3 : 2}`
+	};
+
+	return (
+		<div className={styles.window_resize_out}>
+			<div className={styles.window_resize_in} style={_style}>
+				{children}
+			</div>
+		</div>
+	);
+}
+
+function WindowBar({
+	keys,
+	title,
+	app,
+	setWd,
+	dispatch
+}: {
+	keys: string;
+	title: string;
+	app: AppMetaData;
+	setWd: (value: Wd) => void;
+	dispatch: (value: object) => void;
+}): React.ReactElement {
+	//
 	const size = useSize();
-	const [_wd, setWd] = useState(props.wd);
-
-	useEffect(() => {
+	//
+	function handleMinized() {
 		setWd((prev: Wd) => {
 			const wd_: Wd = { ...prev };
-
-			if (wd_.state == WindowState.normal) {
-				wd_.size.w = size.width / 2;
-				wd_.size.h = size.height / 2;
-				wd_.point.x = size.width / 2 - wd_.size.w / 2;
-				wd_.point.y = size.height / 2 - wd_.size.h / 2;
-			} else if (wd_.state == WindowState.maximum) {
-				wd_.size.w = size.width;
-				wd_.size.h = size.height;
-				wd_.point.x = 0;
-				wd_.point.y = 0;
-			}
-			return { ...wd_ };
+			wd_.size.w = 0;
+			wd_.size.h = 0;
+			wd_.point.x = 0;
+			wd_.point.y = -1000;
+			return { ...wd_, state: WindowState.minimized };
 		});
-	}, [size]);
-
-	return [_wd, setWd, dispatch];
-}
-
-export default function Window(props: IWindowpProps): ReactElement {
-	const [_wd, setWd, dispatch] = useWindow();
-
+		dispatch({ type: actions.minimized, app });
+	}
+	//
 	function handleChangeState() {
 		setWd((prev: Wd) => {
 			const wd_: Wd = { ...prev };
@@ -71,127 +140,81 @@ export default function Window(props: IWindowpProps): ReactElement {
 			return { ...wd_ };
 		});
 	}
-
-	const _style = {
-		width: `${_wd.size.w}px`,
-		height: `${_wd.size.h - 30}px`,
-		left: `${_wd.point.x}px`,
-		top: `${_wd.point.y}px`
-	};
-
-	function Dispatch(obj: object) {
-		if (obj.type !== "") {
-			dispatch(obj);
-		}
-	}
-
-	return (
-		<WindowDraggable>
-			<WindowResize>
-				<WindowBar />
-				<WindowContainer />
-			</WindowResize>
-		</WindowDraggable>
-	);
-}
-
-function WindowDraggable(children: ReactElement): ReactElement {
-	return (
-		<Draggable
-			axis={"both"}
-			handle={".handle"}
-			bounds={{ left: -1000, top: 0, right: 1000, bottom: 1000 }}
-			disabled={_wd.state == WindowState.maximum ? true : false}
-			defaultPosition={{ x: _wd.point.x, y: _wd.point.y }}
-			positionOffset={{ x: 0, y: 0 }}
-			scale={1}>
-			{children}
-		</Draggable>
-	);
-}
-
-function WindowResize({ children }: { children: ReactNode }): ReactElement {
-	return (
-		<div>
-			<div
-				className={styles.window}
-				style={_style}
-				onClick={() => {
-					if (props.windowsFocus?.key !== props.wd.key) props.setFocus();
-				}}>
-				{children}
-			</div>
-		</div>
-	);
-}
-
-function WindowBar(): ReactElement {
-	function handleMinized() {
-		setWd((prev: Wd) => {
-			prev.size.w = 0;
-			prev.size.h = 0;
-			prev.point.x = 0;
-			prev.point.y = -1000;
-			return { ..._wd, state: WindowState.minimized };
-		});
-		dispatch({ type: actions.minimized, app: _wd.app });
-	}
-
+	//
 	function handleClose() {
-		dispatch({ type: actions.closeApp, window: _wd });
+		dispatch({ type: actions.closeApp, windowKey: keys });
 	}
-
+	//
+	function handleFocus() {
+		dispatch({ type: actions.windowFocus, key: keys });
+	}
+	//
 	return (
-		<div className={styles.bar}>
-			<div className={`handle ${styles.handle_}`}>
+		<div className={styles.container_bar}>
+			<div className={`bar ${styles.bar_title}`} onClick={handleFocus}>
 				<span>{title}</span>
 			</div>
 			<div className={styles.bar_control}>
+				{/*minimized*/}
 				<buttonControl
-					className={`${styles.icon} ${styles.minimized}`}
-					onclick={handleMinized}></buttonControl>
-
+					className={styles.icon}
+					onClick={handleMinized}></buttonControl>
+				{/*maximumNormal*/}
 				<buttonControl
-					className={`${styles.icon} ${styles.maximumNormal}`}
-					onclick={handleChangeState}></buttonControl>
-
+					className={styles.icon}
+					onClick={handleChangeState}></buttonControl>
+				{/*close*/}
 				<buttonControl
-					className={`${styles.icon} ${styles.close}`}
-					onclick={handleClose}></buttonControl>
+					className={styles.icon}
+					onClick={handleClose}></buttonControl>
 			</div>
 		</div>
 	);
 }
 
-function buttonControl(props) {
-	return <button {...props}></button>;
+function buttonControl({
+	props,
+	children
+}: {
+	props: any;
+	children: React.ReactNode;
+}): React.ReactElement {
+	return <button {...props}>{children}</button>;
 }
 
-function WindowContainer() {
+function WindowContainer({
+	url,
+	size,
+	point
+}: {
+	url: string;
+	size: Size;
+	point: Point;
+}): React.ReactElement {
+	//
 	const DynamicComponet = useMemo(
 		() =>
-			dynamic(() => import(`../../root/bin/${_wd.url}`), {
+			dynamic(() => import(`../../root/bin/${url}`), {
 				ssr: false,
 				loading: () => (
 					<LdDualRing
-						width={_wd.size.w}
-						height={_wd.size.h}
-						x={_wd.point.x}
-						y={_wd.point.y + 50}
+						width={size.w}
+						height={size.h}
+						x={point.x}
+						y={point.y + 50}
 						show={true}
 					/>
 				)
 			}),
-		[_wd.url]
+		[url]
 	);
 
 	return (
 		<div className={styles.container}>
-			<DynamicComponet State={state["profiles"]} dispatch={Dispatch} />
+			<DynamicComponet />
 		</div>
 	);
 }
-
 
 /*
 

@@ -92,7 +92,7 @@ export default function Reducer(state, action) {
 			return { ...state };
 		},
 		minimized: () => {
-			 state.dock.apps.push(action.app);
+			state.dock.apps.push(action.app);
 			return { ...state };
 		},
 		changeWindowState: () => {
@@ -106,9 +106,9 @@ export default function Reducer(state, action) {
 			)[0];
 
 			const index = desktop.openWindows.findIndex(
-				w => w.key === action.window.key
+				w => w.key === action.windowKey
 			);
-
+			alert("--: " + action.windowKey);
 			if (index !== -1) {
 				desktop.openWindows.splice(index, 1);
 			}

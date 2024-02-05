@@ -1,23 +1,26 @@
 /** @format */
 
+import React, { useMemo } from "react";
+
 import Dk from "md/desk";
 import Wd from "md/window";
+
 import Window from "cp/window";
 import FileFolder from "cp/file_folder";
+
 import useSuperState from "hk/use_super_state";
 import Reducer, { actions } from "hp/reducer";
 import initialState from "hp/initial_state";
 import useSize from "hk/use_size";
 import styles from "st/core.module.css";
 
-export default function Desktop() {
+export default function Desktop(): React.ReactNode {
 	const [state, dispatch] = useSuperState(Reducer, initialState(), [
 		"desks",
 		"taskbar"
 	]);
 
 	const size = useSize();
-
 	const { desks, taskbar } = state;
 
 	const _styles: React.CSSProperties = {
@@ -42,20 +45,8 @@ export default function Desktop() {
 				if (desk_.key === taskbar.desktop.key)
 					return (
 						<div key={index} style={_styles}>
-							{desk_.fileFolders.map((obj: File | Folder, inde: number) => (
-								<FileFolder key={inde} obj={obj} />
-							))}
-
-							{desk_.openWindows?.map((w: Wd, i: number) => (
-								<Window
-									key={i}
-									wd={w}
-									windowsFocus={desk_.windowFocus}
-									setFocus={() => {
-										dispatch({ type: "setFocus", value: w, key: desk_.key });
-									}}
-								/>
-							))}
+							<ShowFileFolder fF={desk_.fileFolders} />
+							<OpenWindows opW={desk_.openWindows} wf={desk_.windowFocus} />
 						</div>
 					);
 			})}
@@ -63,49 +54,50 @@ export default function Desktop() {
 	);
 }
 
-import React, { useRef, useEffect } from "react";
-
-const DraggableWindow = () => {
-	const windowRef = useRef(null);
-	const barRef = useRef(null);
-
-	useEffect(() => {
-		windowRef.addEventListener("dragstart", event => {
-			alert("start");
-			//    	event.dataTransfer.setData("text/plain", "This text may be dragged")
-		});
-		windowRef.addEventListener("dragend", event => {
-			alert("end");
-			//event.dataTransfer.setData("text/plain", "This text may be dragged")
-		});
-		windowRef.addEventListener("drag", event => {
-			alert("drag");
-			//	event.dataTransfer.setData("text/plain", "This text may be dragged")
-		});
-	}, []);
+function ShowFileFolder({ fF }: { fF: (File | Folder)[] }): React.ReactNode {
+	//
+	function MemoFileFolder({
+		index,
+		obj
+	}: {
+		index: number;
+		obj: File | Folder;
+	}): React.Element {
+		//
+		return useMemo(() => <FileFolder key={index} obj={obj} />, [obj]);
+	}
 
 	return (
-		<div
-			ref={windowRef}
-			className='window'
-			style={{
-				width: "200px",
-				height: "150px",
-				backgroundColor: "red",
-				border: "1px solid black"
-			}}
-			draggable='true'>
-			<div
-				ref={barRef}
-				className='bar'
-				style={{
-					width: "100%",
-					height: "30px",
-					cursor: "move",
-					backgroundColor: "lightgray"
-				}}>
-				Drag me!
-			</div>
-		</div>
+		<>
+			{fF.map((obj: File | Folder, index: number) => (
+				<MemoFileFolder key={index} index={index} obj={obj} />
+			))}
+		</>
 	);
-};
+}
+
+function OpenWindows({ opW, wf }: { opW: Wd[]; wf: string }): React.ReactNode {
+	//
+	function MemoWindow({
+		index,
+		wd,
+		haveFocus
+	}: {
+		index: number;
+		wd: Wd;
+		haveFocus: boolean;
+	}): any {
+		return useMemo(
+			() => <Window key={index} wd={wd} haveFocus={haveFocus} />,
+			[wd, haveFocus]
+		);
+	}
+
+	return (
+		<>
+			{opW.map((w: Wd, index: number) => (
+				<MemoWindow key={index} index={index} wd={w} haveFocus={wf === w.key} />
+			))}
+		</>
+	);
+}
