@@ -35,7 +35,7 @@ export default function Window({
 	return (
 		<WindowDraggable {..._wd}>
 			<WindowResize {..._wd} haveFocus={haveFocus} setWd={setWd}>
-				<WindowBar {..._wd} keys={_wd.key} setWd={setWd} dispatch={dph} />
+				<WindowBar {..._wd} setWd={setWd} dispatch={dph} />
 				<WindowContainer {..._wd} />
 			</WindowResize>
 		</WindowDraggable>
@@ -54,11 +54,11 @@ function WindowDraggable({
 	return (
 		<Draggable
 			axis={"both"}
-			handle={".bar"}
+			handle='.handle'
 			bounds={{ left: -1000, top: 0, right: 1000, bottom: 1000 }}
-			disabled={state == WindowState.maximum ? true : false}
-			defaultPosition={{ x: point.x, y: point.y }}
-			positionOffset={{ x: 0, y: 0 }}
+			//disabled={state == WindowState.maximum ? true : false}
+			//defaultPosition={{ x: point.x, y: point.y }}
+			//	positionOffset={{ x: 0, y: 0 }}
 			scale={1}>
 			{children}
 		</Draggable>
@@ -76,6 +76,7 @@ function WindowResize({
 	point: Point;
 	children: React.ReactNode;
 }): React.ReactElement {
+	//
 	const _style = {
 		width: `${size.w}px`,
 		height: `${size.h - 30}px`,
@@ -85,10 +86,8 @@ function WindowResize({
 	};
 
 	return (
-		<div className={styles.window_resize_out}>
-			<div className={styles.window_resize_in} style={_style}>
-				{children}
-			</div>
+		<div className={styles.window_resize_out} style={_style}>
+			<div className={styles.window_resize_in}>{children}</div>
 		</div>
 	);
 }
@@ -116,7 +115,8 @@ function WindowBar({
 			wd_.size.h = 0;
 			wd_.point.x = 0;
 			wd_.point.y = -1000;
-			return { ...wd_, state: WindowState.minimized };
+			wd_.state = WindowState.minimized;
+			return { ...wd_ };
 		});
 		dispatch({ type: actions.minimized, app });
 	}
@@ -151,7 +151,7 @@ function WindowBar({
 	//
 	return (
 		<div className={styles.container_bar}>
-			<div className={`bar ${styles.bar_title}`} onClick={handleFocus}>
+			<div className={`handle ${styles.bar_title}`} onClick={handleFocus}>
 				<span>{title}</span>
 			</div>
 			<div className={styles.bar_control}>

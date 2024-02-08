@@ -8,20 +8,34 @@ import Wd from "md/window";
 import Window from "cp/window";
 import FileFolder from "cp/file_folder";
 
-import useSuperState from "hk/use_super_state";
+import useSuperState, { Equal } from "hk/use_super_state";
 import Reducer, { actions } from "hp/reducer";
 import initialState from "hp/initial_state";
 import useSize from "hk/use_size";
 import styles from "st/core.module.css";
 
 export default function Desktop(): React.ReactNode {
-	const [state, dispatch] = useSuperState(Reducer, initialState(), [
-		"desks",
-		"taskbar"
-	]);
+	const [state, dispatch] = useSuperState(
+		Reducer,
+		initialState(),
+		//["taskbar", "desks"]
+		
+		(prev: any, state: any, prop: string | null) => {
+			if (prop === "desks") {
+				return true; //!Equal(prev, state["desks"]);
+			} else if (prop === "taskbar") {
+				return !state["taskbar"].desktop.key === prev.desktop.key;
+			}
+			return ["taskbar", "desks"];
+		}
+		
+	);
 
+	alert("'xzzzz");
 	const size = useSize();
-	const { desks, taskbar } = state;
+
+	//	const { desks, taskbar } = state;
+	const desks = [];
 
 	const _styles: React.CSSProperties = {
 		width: "100%",
@@ -42,7 +56,7 @@ export default function Desktop(): React.ReactNode {
 	return (
 		<>
 			{desks.map((desk_: Dk, index: number) => {
-				if (desk_.key === taskbar.desktop.key)
+				if (desk_.keys === taskbar.desktop.keys)
 					return (
 						<div key={index} style={_styles}>
 							<ShowFileFolder fF={desk_.fileFolders} />
@@ -87,11 +101,19 @@ function OpenWindows({ opW, wf }: { opW: Wd[]; wf: string }): React.ReactNode {
 		wd: Wd;
 		haveFocus: boolean;
 	}): any {
-		return useMemo(
-			() => <Window key={index} wd={wd} haveFocus={haveFocus} />,
-			[wd, haveFocus]
-		);
+		const MemoElement = <Window key={index} wd={wd} haveFocus={haveFocus} />;
+
+		return <>{MemoElement}</>;
 	}
+
+	const areEqual = (prevProps: any, nextProps: any) => {
+		return (
+			//prevProps.wd.state === nextProps.wd.state &&
+			prevProps.haveFocus === nextProps.haveFocus
+		);
+	};
+
+	const MemoizedWindow = React.memo(MemoWindow, areEqual);
 
 	return (
 		<>

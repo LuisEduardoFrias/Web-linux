@@ -34,7 +34,7 @@ export default class TaskBar extends BaseObject {
 		this.panel_checklock = false;
 		this.panel_info = false;
 	}
-/*
+	/*
 	changeVolume(value: number) {
 		//
 		Dispatch({ type: actions.changeVolume, value: value });

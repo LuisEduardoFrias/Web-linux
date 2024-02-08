@@ -9,14 +9,14 @@ import Size from "md/size";
 import Window from "md/window";
 
 export default class Desk {
-	key: string;
+	keys: string;
 	fileFolders: (File | Forder)[];
 	openWindows: Window[];
 	windowFocus: string;
 	name: string;
 
 	constructor(fileFolders: (File | Forder)[], desktop: string) {
-		this.key = Guid.create().toString();
+		this.keys = Guid.create().toString();
 		this.fileFolders = fileFolders;
 		this.name = desktop;
 		this.openWindows = [];

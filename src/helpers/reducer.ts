@@ -105,10 +105,9 @@ export default function Reducer(state, action) {
 				(desk: Dk) => desk.key === state.taskbar.desktop.key
 			)[0];
 
-			const index = desktop.openWindows.findIndex(
-				w => w.key === action.windowKey
-			);
-			alert("--: " + action.windowKey);
+			const index = desktop.openWindows.findIndex(w => {
+				return w.keys === action.windowKey;
+			});
 			if (index !== -1) {
 				desktop.openWindows.splice(index, 1);
 			}

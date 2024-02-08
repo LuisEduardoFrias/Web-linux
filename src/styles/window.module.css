@@ -1,10 +1,11 @@
 /** @format */
 
 .window_resize_out {
+	position: absolute;
 	width: 100%;
 	height: 100%;
 	background-color: transparent;
-	padding: 0px;
+	padding: 0;
 	box-sizing: border-box;
 	box-shadow: 0 0 3px 1px #273755;
 	border-radius: 0 0 3px 3px;
